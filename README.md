@@ -35,3 +35,15 @@ chmod +x pr-monitor-merge.sh
 ## License
 
 MIT
+
+
+## Installation
+
+1. Clone this repo or copy individual skills
+2. Copy skill folders to `~/.claude/plugins/marketplaces/`
+3. Restart Claude Code or reload plugins
+
+## Contributing
+
+Contributions welcome! Feel free to add your own skills and tools.
+
