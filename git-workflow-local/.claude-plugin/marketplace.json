@@ -1,0 +1,34 @@
+{
+  "name": "git-workflow-local",
+  "description": "Local git workflow automation skills for feature development PR cycles",
+  "owner": {
+    "name": "cyantorno",
+    "url": "https://github.com/tupacalypse187"
+  },
+  "plugins": [
+    {
+      "name": "git-workflow",
+      "source": "./",
+      "description": "Complete git workflow automation skill for feature branch, PR creation, review, and merge cycles with emoji conventional commits and markdown PR templates.",
+      "version": "1.0.0",
+      "author": {
+        "name": "cyantorno",
+        "url": "https://github.com/tupacalypse187"
+      },
+      "category": "development",
+      "keywords": [
+        "git",
+        "workflow",
+        "pr",
+        "merge",
+        "conventional-commits",
+        "emoji",
+        "github",
+        "feature-branch"
+      ],
+      "homepage": "https://github.com/tupacalypse187",
+      "repository": "https://github.com/tupacalypse187",
+      "license": "MIT"
+    }
+  ]
+}

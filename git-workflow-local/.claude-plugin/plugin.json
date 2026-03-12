@@ -1,0 +1,22 @@
+{
+  "name": "git-workflow",
+  "version": "1.0.0",
+  "description": "Git workflow automation skill for feature branch PR cycles",
+  "author": {
+    "name": "cyantorno",
+    "url": "https://github.com/tupacalypse187"
+  },
+  "license": "MIT",
+  "keywords": [
+    "git",
+    "workflow",
+    "pr",
+    "merge",
+    "conventional-commits",
+    "emoji",
+    "github",
+    "feature-branch"
+  ],
+  "repository": "https://github.com/tupacalypse187",
+  "homepage": "https://github.com/tupacalypse187"
+}
