@@ -89,16 +89,19 @@ git push
 2. **Reply to each review comment** explaining what was done:
 
 ```bash
+# Capture the fix commit hash before replying
+FIX_HASH=$(git rev-parse --short HEAD)
+
 # Reply to inline review comment
 gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
   --method POST \
-  --field body="✅ Fixed in $(git rev-parse --short HEAD). <Brief explanation of the fix." \
+  --field body="✅ Fixed in $FIX_HASH. <Brief explanation of the fix." \
   --field in_reply_to=<comment_id>
 
 # Reply to issue-level comment
 gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
   --method POST \
-  --field body="✅ Addressed. <Brief explanation of the fix."
+  --field body="✅ Addressed in $FIX_HASH. <Brief explanation of the fix."
 ```
 
 Reply format:

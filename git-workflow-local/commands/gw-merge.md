@@ -62,6 +62,13 @@ for i in {1..60}; do
   sleep 10
 done
 
+# Check if we exited due to CLEAN status or timeout
+if [ "$pr_status" != "CLEAN" ]; then
+  echo "❌ Timed out waiting for checks to pass!"
+  echo "Run 'gh pr view $PR_NUMBER' to check status"
+  exit 1
+fi
+
 # Merge with squash
 if [ -n "$COMMIT_SUBJECT" ]; then
   gh pr merge $PR_NUMBER --squash --delete-branch --subject "$COMMIT_SUBJECT"

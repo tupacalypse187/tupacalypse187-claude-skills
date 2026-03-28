@@ -455,7 +455,8 @@ while true; do
   # (Claude Code evaluates and fixes each comment here)
 
   git push
-  PROCESSED_IDS="${PROCESSED_IDS}\n${NEW_IDS}"
+  PROCESSED_IDS="${PROCESSED_IDS}
+${NEW_IDS}"
 
   echo "⏳ Waiting for CI and re-review..."
   sleep 60

@@ -24,7 +24,7 @@ This command runs the complete git workflow: create branch → commit changes �
 ### Step 1: Create Branch
 ```bash
 git checkout main && git pull
-BRANCH_NAME="feat/$(echo '$1' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')"
+BRANCH_NAME="feat/$(echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')"
 git checkout -b "$BRANCH_NAME"
 ```
 
@@ -101,16 +101,19 @@ gh pr view $PR_NUMBER --json reviews --jq '.reviews[] | {state: .state, body: .b
      ```
    - Reply to each comment:
      ```bash
+     # Capture the fix commit hash before replying
+     FIX_HASH=$(git rev-parse --short HEAD)
+
      # Reply to inline review comment
      gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
        --method POST \
-       --field body="✅ Fixed in $(git rev-parse --short HEAD). <what changed>" \
+       --field body="✅ Fixed in $FIX_HASH. <what changed>" \
        --field in_reply_to=<comment_id>
 
      # Reply to general PR comment
      gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
        --method POST \
-       --field body="✅ Addressed. <what changed>"
+       --field body="✅ Addressed in $FIX_HASH. <what changed>"
      ```
 
 3. **Loop** — re-check for new comments on the fixes. If new comments exist, repeat from step 2. Continue until no new feedback.
