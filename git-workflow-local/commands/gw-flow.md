@@ -65,8 +65,8 @@ Wait for code reviews to appear, then evaluate and address each comment.
 
 ```bash
 # Wait for reviews (code reviews typically take a few minutes)
-echo "⏳ Waiting 120 seconds for code reviews..."
-sleep 120
+echo "⏳ Waiting 180 seconds for code reviews..."
+sleep 180
 ```
 
 Then for each review comment found:

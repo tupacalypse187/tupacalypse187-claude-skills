@@ -5,7 +5,7 @@ arguments:
     description: Pull request number
     required: true
   - name: wait_seconds
-    description: Seconds to wait before first poll for review comments (default 120)
+    description: Seconds to wait before first poll for review comments (default 180)
     required: false
 ---
 
@@ -18,12 +18,12 @@ This command polls a PR for code review comments, evaluates each one, makes code
 ### Phase 1: Wait for Reviews
 
 1. Get the PR number from the user
-2. Wait the specified number of seconds (default 120) for code reviews to complete
+2. Wait the specified number of seconds (default 180) for code reviews to complete
 3. Display a countdown while waiting
 
 ```bash
-echo "⏳ Waiting ${WAIT_SECONDS:-120} seconds for code reviews to complete..."
-sleep ${WAIT_SECONDS:-120}
+echo "⏳ Waiting ${WAIT_SECONDS:-180} seconds for code reviews to complete..."
+sleep ${WAIT_SECONDS:-180}
 ```
 
 ### Phase 2: Fetch Review Comments

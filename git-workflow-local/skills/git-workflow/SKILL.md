@@ -246,7 +246,7 @@ Wait for code reviews to complete before checking comments:
 
 ```bash
 echo "⏳ Waiting for code reviews..."
-sleep 120
+sleep 180
 ```
 
 ### Fetch Review Comments
@@ -438,7 +438,7 @@ REPO_SLUG=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
 # Step 5: Wait for reviews
 echo "⏳ Waiting 120 seconds for code reviews..."
-sleep 120
+sleep 180
 
 # Step 6-8: Remediation loop
 PROCESSED_IDS=""
