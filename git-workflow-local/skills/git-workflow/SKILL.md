@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: Complete git workflow automation for feature development. Use when creating feature branches, making commits, creating PRs, addressing reviews, monitoring PR status, merging, and cleaning up branches. Covers the full PR lifecycle from branch creation to merge.
+description: Complete git workflow automation for feature development. Use when creating feature branches, making commits, creating PRs, addressing reviews, monitoring PR status, merging, and cleaning up branches. Covers the full PR lifecycle from branch creation to merge including review remediation.
 ---
 
 # Git Workflow Automation
@@ -17,12 +17,13 @@ This skill automates the complete feature development workflow:
 2. **Commit changes** with emoji conventional commits
 3. **Push to remote**
 4. **Create PR** with structured markdown template
-5. **Monitor PR** for comments/reviews
-6. **Address reviews** with fixes
-7. **Monitor status** (UNSTABLE -> CLEAN)
-8. **Merge PR** (squash + delete branch)
-9. **Cleanup** local and remote branches
-10. **Sync** with main
+5. **Poll for reviews** — wait for code review comments
+6. **Evaluate and remediate** — categorize and fix each comment
+7. **Push fixes and reply** — push changes, acknowledge every comment
+8. **Loop** — re-check for new feedback on fixes
+9. **Monitor status** (UNSTABLE -> CLEAN)
+10. **Merge PR** (squash + delete branch)
+11. **Cleanup** local and remote branches
 
 ---
 
@@ -239,35 +240,57 @@ Fix memory leak in event handler that caused increased memory usage over time.
 
 ---
 
-## Step 5: Monitor PR for Comments/Reviews
+## Step 5: Poll for Code Reviews
+
+Wait for code reviews to complete before checking comments:
 
 ```bash
+echo "⏳ Waiting for code reviews..."
+sleep 120
+```
+
+### Fetch Review Comments
+
+```bash
+# Resolve repo slug
+REPO_SLUG=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
+
 # List PRs
 gh pr list
 
 # View PR details
 gh pr view <PR_NUMBER>
 
-# View PR comments
-gh pr view <PR_NUMBER> --json comments --jq '.comments[].body'
+# Get inline code-level review comments (filter out replies to get originals only)
+gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments --jq '.[] | select(.in_reply_to_id == null) | {id: .id, path: .path, line: .line, body: .body}'
 
-# View review comments
-gh pr view <PR_NUMBER> --json reviews --jq '.reviews[].body'
+# Get issue-level comments (general PR comments)
+gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments --jq '.[] | {id: .id, body: .body}'
+
+# Get review state
+gh pr view $PR_NUMBER --json reviews --jq '.reviews[] | {state: .state, body: .body, author: .author.login}'
 ```
 
 ---
 
-## Step 6: Address Review Comments
+## Step 6: Evaluate and Remediate Review Comments
 
-### Process for Addressing Feedback
+### Categorize Each Comment
 
-1. **Read and understand** each comment
-2. **Make fixes** in your branch
-3. **Commit fixes** with appropriate emoji commits
-4. **Push changes** to update the PR
-5. **Reply to comments** to acknowledge fixes
+| Category | Action | Examples |
+|----------|--------|---------|
+| Must fix | Code change required | Bugs, security issues, logic errors, broken tests |
+| Should fix | Code change recommended | Code style, naming, missing error handling |
+| Suggestion | Optional, apply judgment | Alternative approaches, nicer patterns |
+| Question | Reply only, no code change | Reviewer asking for clarification |
+| Already addressed | Reply only | Comment refers to code already fixed |
 
-### Example: Fixing Review Comments
+### Process for Each Comment
+
+1. **Read the referenced file** at the specified line number
+2. **Make the minimal fix** needed to address the feedback
+3. **Stage and commit** with appropriate emoji commit
+4. **Track the comment ID** for replying later
 
 ```bash
 # Make the fix
@@ -275,14 +298,49 @@ gh pr view <PR_NUMBER> --json reviews --jq '.reviews[].body'
 
 # Commit the fix
 git add <changed-files>
-git commit -m "🐛 fix: address review comment - handle edge case"
+git commit -m "🐛 fix: address review feedback - handle edge case"
+```
 
-# Push to update PR
+---
+
+## Step 7: Push Fixes and Reply to Every Comment
+
+After all fixes are committed:
+
+```bash
+# Push all fix commits
 git push
 
-# Reply to comment (optional)
-gh pr edit <PR_NUMBER> --add-assignee <reviewer>
+# Reply to inline review comment
+gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
+  --method POST \
+  --field body="✅ Fixed in $(git rev-parse --short HEAD). <what changed>" \
+  --field in_reply_to=<comment_id>
+
+# Reply to general PR comment
+gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
+  --method POST \
+  --field body="✅ Addressed. <what changed>"
 ```
+
+Reply format:
+- Fixes: `✅ Fixed in <short_hash> — <what was changed>`
+- Questions: `💡 <answer>`
+- Suggestions not applied: `🙏 Good suggestion, but <reason>. Happy to revisit if needed.`
+
+---
+
+## Step 8: Loop — Re-check for New Feedback
+
+After pushing fixes:
+
+```bash
+# Re-fetch comments and compare against already-processed IDs
+gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments --jq '.[] | select(.in_reply_to_id == null) | .id'
+```
+
+- If new comment IDs found → repeat from Step 6
+- If no new comments → proceed to Step 9
 
 ### Common Review Responses
 
@@ -297,7 +355,7 @@ gh pr edit <PR_NUMBER> --add-assignee <reviewer>
 
 ---
 
-## Step 7: Monitor PR Status (UNSTABLE -> CLEAN)
+## Step 9: Monitor PR Status (UNSTABLE -> CLEAN)
 
 Use this monitoring loop to wait for all CI checks to pass:
 
@@ -332,7 +390,7 @@ exit 1
 
 ---
 
-## Step 8: Merge PR (Squash + Delete Branch)
+## Step 10: Merge PR (Squash + Delete Branch)
 
 ```bash
 gh pr merge <PR_NUMBER> --squash --delete-branch --subject "✨ feat: brief description"
@@ -346,7 +404,7 @@ gh pr merge <PR_NUMBER> --squash --delete-branch --subject "✨ feat: brief desc
 
 ---
 
-## Step 9: Cleanup Local and Remote Branches
+## Step 11: Cleanup Local and Remote Branches
 
 ```bash
 # Switch back to main
@@ -367,32 +425,45 @@ git push origin --delete feat/descriptive-name
 
 ---
 
-## Step 10: Sync with Main
-
-```bash
-# Ensure main is up to date
-git checkout main
-git pull origin main
-
-# Optional: Create new branch for next feature
-git checkout -b feat/next-feature
-```
-
----
-
 ## Complete Workflow Script
 
-Here's a complete script that combines steps 7-10 (monitor, merge, cleanup):
+Here's a complete script that combines the full workflow (monitor, remediate, merge, cleanup):
 
 ```bash
 #!/bin/bash
 set -e
 
 PR_NUMBER="<PR_NUMBER>"
-BRANCH_NAME="feat/descriptive-name"
+REPO_SLUG=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
-# Step 7: Monitor PR status
+# Step 5: Wait for reviews
+echo "⏳ Waiting 120 seconds for code reviews..."
+sleep 120
+
+# Step 6-8: Remediation loop
+PROCESSED_IDS=""
+while true; do
+  COMMENT_IDS=$(gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments --jq '.[] | select(.in_reply_to_id == null) | .id')
+  NEW_IDS=$(comm -23 <(echo "$COMMENT_IDS" | sort) <(echo "$PROCESSED_IDS" | sort) || true)
+
+  if [ -z "$NEW_IDS" ]; then
+    echo "✅ No new review comments."
+    break
+  fi
+
+  echo "📝 New review comments found. Addressing..."
+  # (Claude Code evaluates and fixes each comment here)
+
+  git push
+  PROCESSED_IDS="${PROCESSED_IDS}\n${NEW_IDS}"
+
+  echo "⏳ Waiting for CI and re-review..."
+  sleep 60
+done
+
+# Step 9: Monitor PR status
 echo "🔍 Monitoring PR #$PR_NUMBER status..."
+HEAD_BRANCH=$(gh pr view $PR_NUMBER --json headRefName --jq '.headRefName')
 for i in {1..60}; do
   pr_status=$(gh pr view $PR_NUMBER --json mergeStateStatus --jq '.mergeStateStatus')
 
@@ -405,19 +476,16 @@ for i in {1..60}; do
   sleep 10
 done
 
-# Step 8: Merge PR
+# Step 10: Merge PR
 echo "🔀 Merging PR #$PR_NUMBER..."
 gh pr merge $PR_NUMBER --squash --delete-branch --subject "feat: brief description"
 
-# Step 9: Cleanup
+# Step 11: Cleanup
 echo "🧹 Cleaning up..."
 git checkout main
 git pull origin main
-git branch -D $BRANCH_NAME 2>/dev/null || true
-
-# Step 10: Sync with main
-echo "✅ Synced with main! Ready for next feature."
-git status
+git branch -D "$HEAD_BRANCH" 2>/dev/null || true
+echo "✅ Done! Ready for next feature."
 ```
 
 ---

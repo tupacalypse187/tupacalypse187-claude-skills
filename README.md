@@ -4,19 +4,33 @@ Collection of Claude Code skills, plugins, and tools.
 
 ## Skills
 
-### Git Workflow Skill
+### Git Workflow Plugin
 
-Complete git workflow automation with emoji-based conventional commits.
+Complete git workflow automation with emoji-based conventional commits, PR creation, review remediation, and merge monitoring.
 
-**Installation:**
+**Install:**
 ```bash
-mkdir -p ~/.claude/plugins/marketplaces/git-workflow-local
-cp -r git-workflow-local/* ~/.claude/plugins/marketplaces/git-workflow-local/
+# Add this repo's plugin directory as a marketplace
+claude plugin marketplace add /path/to/tupacalypse187-claude-skills/git-workflow-local
+
+# Install the plugin
+claude plugin install git-workflow@git-workflow-local
+```
+
+**Or from within a Claude Code session:**
+```
+/plugin marketplace add /path/to/tupacalypse187-claude-skills/git-workflow-local
+/plugin install git-workflow@git-workflow-local
+```
+
+**Update after changes:**
+```bash
+claude plugin update git-workflow@git-workflow-local
 ```
 
 **Usage:**
 - Natural language: "Complete git workflow for adding dark mode"
-- Slash commands: `/gw-flow`, `/gw-branch`, `/gw-commit`, `/gw-pr`, `/gw-merge`
+- Slash commands: `/gw-flow`, `/gw-branch`, `/gw-commit`, `/gw-pr`, `/gw-remediate`, `/gw-merge`
 
 See [git-workflow-local/README.md](git-workflow-local/README.md) for full documentation.
 
@@ -36,14 +50,6 @@ chmod +x pr-monitor-merge.sh
 
 MIT
 
-
-## Installation
-
-1. Clone this repo or copy individual skills
-2. Copy skill folders to `~/.claude/plugins/marketplaces/`
-3. Restart Claude Code or reload plugins
-
 ## Contributing
 
 Contributions welcome! Feel free to add your own skills and tools.
-

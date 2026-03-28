@@ -16,8 +16,10 @@ This command creates a new feature branch from main with proper naming conventio
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
 - `refactor/` - Code refactoring
-- `chore/` - Maintenance tasks
+- `perf/` - Performance improvements
 - `test/` - Test changes
+- `chore/` - Maintenance tasks
+- `ci/` - CI/CD changes
 
 ## Instructions
 
@@ -50,10 +52,14 @@ elif [[ "$BRANCH_NAME" == docs-* ]]; then
   PREFIX="docs/"
 elif [[ "$BRANCH_NAME" == refactor-* ]]; then
   PREFIX="refactor/"
-elif [[ "$BRANCH_NAME" == chore-* ]]; then
-  PREFIX="chore/"
+elif [[ "$BRANCH_NAME" == perf-* ]]; then
+  PREFIX="perf/"
 elif [[ "$BRANCH_NAME" == test-* ]]; then
   PREFIX="test/"
+elif [[ "$BRANCH_NAME" == chore-* ]]; then
+  PREFIX="chore/"
+elif [[ "$BRANCH_NAME" == ci-* ]]; then
+  PREFIX="ci/"
 fi
 
 # Remove prefix if user included it
