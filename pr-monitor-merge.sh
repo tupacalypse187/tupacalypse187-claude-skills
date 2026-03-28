@@ -13,6 +13,9 @@ if [ -z "$PR_NUMBER" ]; then
   exit 1
 fi
 
+# Resolve head branch name for cleanup later
+HEAD_BRANCH=$(gh pr view "$PR_NUMBER" --json headRefName --jq '.headRefName' 2>/dev/null || echo "")
+
 echo "🔍 Monitoring PR #$PR_NUMBER..."
 echo ""
 
@@ -36,9 +39,9 @@ for i in {1..60}; do
     git checkout main
     git pull
 
-    if git rev-parse --verify "feat/*" >/dev/null 2>&1; then
-      echo "🧹 Cleaning up local feature branches..."
-      git branch -d "feat/$(gh pr view "$PR_NUMBER" --json headRefName --jq '.headRefName' | sed 's/feat\///')" 2>/dev/null || true
+    if [ -n "$HEAD_BRANCH" ]; then
+      echo "🧹 Cleaning up local branch: $HEAD_BRANCH..."
+      git branch -D "$HEAD_BRANCH" 2>/dev/null || true
     fi
 
     echo ""

@@ -12,6 +12,8 @@
     "workflow",
     "pr",
     "merge",
+    "review",
+    "remediation",
     "conventional-commits",
     "emoji",
     "github",

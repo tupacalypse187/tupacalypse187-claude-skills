@@ -1,0 +1,54 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is a **Claude Code plugin** (`git-workflow`) that automates the full feature development lifecycle: branch creation, emoji conventional commits, PR creation with structured templates, review remediation, PR monitoring, merging, and branch cleanup. It contains no compilable code — only markdown-based slash commands, skill definitions, and a standalone bash script.
+
+## Architecture
+
+```
+git-workflow-local/                    # The plugin directory
+├── .claude-plugin/
+│   ├── plugin.json                    # Plugin metadata (only this goes in .claude-plugin/)
+│   └── marketplace.json               # Marketplace listing config
+├── commands/                          # At plugin root, NOT inside .claude-plugin/
+│   ├── gw-flow.md                     # /gw-flow — full workflow (branch→commit→push→PR→review→merge)
+│   ├── gw-branch.md                   # /gw-branch — create feature branch from main
+│   ├── gw-commit.md                   # /gw-commit — emoji conventional commit
+│   ├── gw-pr.md                       # /gw-pr — create PR with structured template
+│   ├── gw-remediate.md                # /gw-remediate — poll reviews, fix, push, reply
+│   └── gw-merge.md                    # /gw-merge — monitor and merge PR
+└── skills/
+    └── git-workflow/
+        └── SKILL.md                   # Complete skill definition (11-step workflow)
+
+pr-monitor-merge.sh                    # Standalone bash script for PR polling/auto-merge
+```
+
+## Conventions
+
+- **Emoji Conventional Commits** — Format: `emoji type[optional scope]: description` (e.g., `✨ feat: add feature`, `🐛 fix(scope): description`). Each type has a specific emoji prefix.
+- **Branch Naming** — Prefixes: `feat/`, `fix/`, `docs/`, `refactor/`, `perf/`, `test/`, `chore/`, `ci/`.
+- **PR Template** — Sections: Summary, Changes, Verification, Sources, plus Claude Code attribution footer.
+- **Squash Merging** — PRs merged with `--squash --delete-branch`. Never commit directly to main.
+- **Co-authored-by** — AI-assisted commits include `Co-authored-by: Claude Opus 4.6 <noreply@anthropic.com>`.
+
+## Development
+
+There is no build system, test suite, or linting. All plugin components are markdown files. To test changes:
+
+```bash
+# Install/update the plugin from local source
+claude plugin marketplace add /path/to/this-repo/git-workflow-local
+claude plugin update git-workflow@git-workflow-local
+
+# Or from within a Claude Code session
+/plugin marketplace add /path/to/this-repo/git-workflow-local
+/reload-plugins
+```
+
+Available slash commands: `/gw-flow`, `/gw-branch`, `/gw-commit`, `/gw-pr`, `/gw-remediate`, `/gw-merge`
+
+The `pr-monitor-merge.sh` script requires `gh` (GitHub CLI) and can be run directly with `bash pr-monitor-merge.sh <PR_NUMBER>`.
