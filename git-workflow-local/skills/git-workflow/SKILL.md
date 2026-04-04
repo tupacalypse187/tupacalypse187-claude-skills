@@ -405,8 +405,10 @@ exit 1
 ## Step 10: Merge PR (Squash + Delete Branch)
 
 ```bash
-gh pr merge <PR_NUMBER> --squash --delete-branch --subject "✨ feat: brief description"
+gh pr merge <PR_NUMBER> --squash --delete-branch
 ```
+
+**Note:** Omitting `--subject` lets GitHub default to the PR title, which already has the correct emoji/type prefix.
 
 **Merge options:**
 - `--squash` - Combine all commits into one (recommended)
