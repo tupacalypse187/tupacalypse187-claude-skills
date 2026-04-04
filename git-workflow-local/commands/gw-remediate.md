@@ -47,6 +47,8 @@ gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments --jq '.[] | {id: .id, body: .
 gh pr view $PR_NUMBER --json reviews --jq '.reviews[] | {state: .state, body: .body, author: .author.login}'
 ```
 
+**Track comment IDs:** Initialize an empty list of processed IDs. You will compare against this list in Phase 7.
+
 ### Phase 3: Evaluate Each Comment
 
 For each review comment:
@@ -86,22 +88,28 @@ After all fixes are committed:
 git push
 ```
 
-2. **Reply to each review comment** explaining what was done:
+2. **Reply to each review comment** explaining what was done.
 
+**⚠️ CRITICAL variable substitution rules:**
+
+You MUST substitute actual values. NEVER use template variables or bash substitution syntax literally in the reply body.
+
+- Run `git rev-parse --short HEAD` and capture the ACTUAL short hash (e.g., `a3f7b2c`). Use that literal value in the reply.
+- Use the ACTUAL numeric comment `id` from Phase 2. Use the literal number.
+
+Reply to an inline review comment (substitute `ACTUAL_HASH` with the real hash, `ACTUAL_COMMENT_ID` with the real numeric ID from Phase 2):
 ```bash
-# Capture the fix commit hash before replying
-FIX_HASH=$(git rev-parse --short HEAD)
-
-# Reply to inline review comment
 gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
   --method POST \
-  --field body="✅ Fixed in $FIX_HASH. <Brief explanation of the fix." \
-  --field in_reply_to=<comment_id>
+  --field body="✅ Fixed in ACTUAL_HASH. <Describe what was actually changed>" \
+  --field in_reply_to=ACTUAL_COMMENT_ID
+```
 
-# Reply to issue-level comment
+Reply to a general PR comment (note: this creates a new top-level comment, not a threaded reply — this is a GitHub API limitation):
+```bash
 gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
   --method POST \
-  --field body="✅ Addressed in $FIX_HASH. <Brief explanation of the fix."
+  --field body="✅ Addressed in ACTUAL_HASH. <Describe what was actually changed>"
 ```
 
 Reply format:
@@ -135,14 +143,21 @@ done
 After pushing fixes and waiting for CI:
 
 1. Re-fetch review comments to check for **new feedback** on the fixes
-2. Compare comment IDs against already-processed ones to find only new comments
-3. If new comments exist, repeat from Phase 3
+2. Compare comment IDs against the processed list from Phase 2
+3. If new (unprocessed) comment IDs exist, add them to the processed list and repeat from Phase 3
 4. If no new comments and checks pass, proceed to merge
+5. **Maximum 5 iterations** — after 5 rounds of remediation, stop and inform the user that manual intervention may be needed
 
 ```bash
 # Re-fetch to check for new comments (compare against previously seen IDs)
 gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments --jq '.[] | select(.in_reply_to_id == null) | .id'
 ```
+
+**How to track processed comment IDs:**
+1. Before starting Phase 3, initialize an empty list of processed IDs
+2. Each time you process a comment, add its numeric `id` to the processed list
+3. When re-fetching in Phase 7, compare the new list of IDs against the processed list
+4. Only process IDs that appear in the new list but NOT in the processed list
 
 ## Important Rules
 

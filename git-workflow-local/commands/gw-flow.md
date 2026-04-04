@@ -13,15 +13,21 @@ This command runs the complete git workflow: create branch → commit changes �
 ## Instructions
 
 1. Create feature branch from description
-2. Stage and commit changes with emoji
+2. Commit changes with emoji
 3. Push to remote
 4. Create PR with structured template
 5. Poll for code review comments and remediate
 6. Monitor and merge when checks pass
 
+## ⚠️ CRITICAL: Execute ALL 6 Steps
+
+You MUST execute ALL 6 steps sequentially without stopping. Do NOT stop after creating the PR (Step 4). Steps 5 and 6 are mandatory parts of this workflow, not optional follow-ups. After each step completes, immediately proceed to the next.
+
 ## Steps
 
 ### Step 1: Create Branch
+> After creating the branch, immediately proceed to Step 2.
+
 ```bash
 git checkout main && git pull
 BRANCH_NAME="feat/$(echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')"
@@ -29,42 +35,84 @@ git checkout -b "$BRANCH_NAME"
 ```
 
 ### Step 2: Commit Changes
+> After committing, immediately proceed to Step 3.
+
+Analyze `git status` and `git diff --staged` to determine the commit type, then use the matching emoji:
+
+| Type | Emoji | When |
+|------|-------|------|
+| feat | ✨ | New feature |
+| fix | 🐛 | Bug fix |
+| docs | 📝 | Documentation |
+| style | 🎨 | Code formatting |
+| refactor | ♻️ | Refactoring |
+| perf | ⚡️ | Performance |
+| test | ✅ | Tests |
+| chore | 🔧 | Maintenance |
+| ci | 👷 | CI/CD |
+
 ```bash
 git status
-# Determine commit type from changes
 git add .
-git commit -m "✨ feat: $1"
+git commit -m "<EMOJI> <TYPE>: $1"
 ```
 
 ### Step 3: Push
+> After pushing, immediately proceed to Step 4.
+
 ```bash
 git push -u origin "$BRANCH_NAME"
 ```
 
 ### Step 4: Create PR
+> After creating the PR, IMMEDIATELY proceed to Step 5. Do NOT stop here.
+
+**Before creating the PR, analyze the actual changes:**
+
 ```bash
-gh pr create --title "✨ feat: $1" --body "$(cat <<EOF
+# See all changes in this branch vs main
+git diff main...HEAD
+
+# See commit messages
+git log main..HEAD --pretty=format:"%s"
+```
+
+Use the same emoji/type from Step 2 for the PR title. Generate the PR body with REAL content from the diff — never use placeholder text.
+
+```bash
+gh pr create --title "<EMOJI> <TYPE>: $1" --body "$(cat <<EOF
 ## 📝 Summary
-$1
+
+[Write a REAL one-sentence summary based on the actual diff — not placeholder text]
 
 ## 🔄 Changes
-- [Changes will be listed here]
+
+[List each meaningful change as a bullet point with emoji prefix. Base on the actual git diff output]
 
 ## ✅ Verification
-- [How to verify]
+
+[Provide specific, runnable verification steps based on what actually changed]
+
+## 🔗 Sources
+
+[Include relevant links: issue references (Closes #N), docs, related PRs. Omit if none exist]
+
+---
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )"
 ```
 
-Capture the PR number from the output for the next steps.
+**Extract the PR number** from the `gh pr create` output URL (e.g., `https://github.com/owner/repo/pull/42` → `PR_NUMBER=42`). Then IMMEDIATELY proceed to Step 5.
 
 ### Step 5: Review Remediation
+> ⚠️ IMPORTANT: You MUST proceed to this step after PR creation. Do not stop.
+
 Wait for code reviews to appear, then evaluate and address each comment.
 
 ```bash
-# Wait for reviews (code reviews typically take a few minutes)
+# Wait for reviews
 echo "⏳ Waiting 180 seconds for code reviews..."
 sleep 180
 ```
@@ -74,7 +122,6 @@ Then for each review comment found:
 1. **Fetch all review comments:**
 
 ```bash
-# Get the repo slug from the remote
 REPO_SLUG=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
 # Inline code-level review comments
@@ -99,37 +146,44 @@ gh pr view $PR_NUMBER --json reviews --jq '.reviews[] | {state: .state, body: .b
      ```bash
      git push
      ```
-   - Reply to each comment:
-     ```bash
-     # Capture the fix commit hash before replying
-     FIX_HASH=$(git rev-parse --short HEAD)
 
-     # Reply to inline review comment
-     gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
-       --method POST \
-       --field body="✅ Fixed in $FIX_HASH. <what changed>" \
-       --field in_reply_to=<comment_id>
+3. **Reply to each review comment — CRITICAL variable substitution:**
 
-     # Reply to general PR comment
-     gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
-       --method POST \
-       --field body="✅ Addressed in $FIX_HASH. <what changed>"
-     ```
+   You MUST substitute actual values. NEVER use template variables literally.
 
-3. **Loop** — re-check for new comments on the fixes. If new comments exist, repeat from step 2. Continue until no new feedback.
+   - Run `git rev-parse --short HEAD` and capture the ACTUAL short hash (e.g., `a3f7b2c`). Use that literal value.
+   - Use the ACTUAL numeric comment `id` from the fetch step above. Use the literal number.
+
+   Reply to an inline review comment (substitute real values for `ACTUAL_HASH` and `ACTUAL_COMMENT_ID`):
+   ```bash
+   gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
+     --method POST \
+     --field body="✅ Fixed in ACTUAL_HASH. <describe what was actually changed>" \
+     --field in_reply_to=ACTUAL_COMMENT_ID
+   ```
+
+   Reply to a general PR comment (note: this creates a new top-level comment — GitHub API limitation):
+   ```bash
+   gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
+     --method POST \
+     --field body="✅ Addressed in ACTUAL_HASH. <describe what was actually changed>"
+   ```
+
+4. **Loop** — re-check for new comments on the fixes. If new comments exist, repeat from step 2. **Maximum 5 iterations** — after 5 rounds, stop and inform the user that manual intervention may be needed.
 
 ### Step 6: Monitor & Merge
+> After remediation is complete, immediately proceed to monitor and merge.
+
 Monitor CI checks and merge when clean:
 
 ```bash
-# Get head branch for cleanup
 HEAD_BRANCH=$(gh pr view $PR_NUMBER --json headRefName --jq '.headRefName')
 
 for i in {1..60}; do
   pr_status=$(gh pr view $PR_NUMBER --json mergeStateStatus --jq '.mergeStateStatus')
   if [ "$pr_status" = "CLEAN" ]; then
     echo "✅ All checks passed!"
-    gh pr merge $PR_NUMBER --squash --delete-branch --subject "✨ feat: $1"
+    gh pr merge $PR_NUMBER --squash --delete-branch --subject "<EMOJI> <TYPE>: $1"
     git checkout main && git pull
     git branch -D "$HEAD_BRANCH" 2>/dev/null || true
     break
@@ -138,3 +192,5 @@ for i in {1..60}; do
   sleep 10
 done
 ```
+
+Use the same emoji and type determined in Step 2 for the merge subject.
