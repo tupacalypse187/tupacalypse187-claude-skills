@@ -147,26 +147,25 @@ gh pr view $PR_NUMBER --json reviews --jq '.reviews[] | {state: .state, body: .b
      git push
      ```
 
-3. **Reply to each review comment — CRITICAL variable substitution:**
+3. **Reply to each review comment:**
 
-   You MUST substitute actual values. NEVER use template variables literally.
-
-   - Run `git rev-parse --short HEAD` and capture the ACTUAL short hash (e.g., `a3f7b2c`). Use that literal value.
-   - Use the ACTUAL numeric comment `id` from the fetch step above. Use the literal number.
-
-   Reply to an inline review comment (substitute real values for `ACTUAL_HASH` and `ACTUAL_COMMENT_ID`):
+   Before replying, compute the fix hash and capture each comment's ID:
    ```bash
-   gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
-     --method POST \
-     --field body="✅ Fixed in ACTUAL_HASH. <describe what was actually changed>" \
-     --field in_reply_to=ACTUAL_COMMENT_ID
+   FIX_HASH=$(git rev-parse --short HEAD)
    ```
 
-   Reply to a general PR comment (note: this creates a new top-level comment — GitHub API limitation):
+   Then for each comment, reply using the shell variable `$FIX_HASH` and the literal numeric `id`:
    ```bash
+   # Reply to inline review comment (use the real comment id from the fetch step)
+   gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
+     --method POST \
+     --field body="✅ Fixed in $FIX_HASH. <describe what was actually changed>" \
+     --field in_reply_to=$COMMENT_ID
+
+   # Reply to general PR comment (note: this creates a new top-level comment — GitHub API limitation)
    gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
      --method POST \
-     --field body="✅ Addressed in ACTUAL_HASH. <describe what was actually changed>"
+     --field body="✅ Addressed in $FIX_HASH. <describe what was actually changed>"
    ```
 
 4. **Loop** — re-check for new comments on the fixes. If new comments exist, repeat from step 2. **Maximum 5 iterations** — after 5 rounds, stop and inform the user that manual intervention may be needed.

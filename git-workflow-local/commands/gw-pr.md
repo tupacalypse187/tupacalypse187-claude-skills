@@ -79,7 +79,7 @@ if [ "$2" = "--draft" ] || [ "$2" = "-d" ]; then
 fi
 
 # Create PR with REAL content generated from the diff
-gh pr create $DRAFT_FLAG --title "$TITLE" --body "$(cat <<EOF
+gh pr create $DRAFT_FLAG --title "$TITLE" --body "$(cat <<'EOF'
 ## 📝 Summary
 
 [Write a REAL one-sentence summary based on the actual git diff — never placeholder text]

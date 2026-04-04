@@ -316,26 +316,23 @@ After all fixes are committed:
 git push
 ```
 
-**⚠️ CRITICAL variable substitution rules for replies:**
-
-You MUST substitute actual values — NEVER use template variables or bash substitution syntax literally.
-
-1. Run `git rev-parse --short HEAD` and capture the ACTUAL short hash (e.g., `a3f7b2c`). Use that literal value in the reply body.
-2. Use the ACTUAL numeric comment `id` from Step 5's fetch. Use the literal number, not a variable name.
-
-Reply to an inline review comment (substitute `ACTUAL_HASH` and `ACTUAL_COMMENT_ID` with real values):
+Before replying, compute the fix hash:
 ```bash
-gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
-  --method POST \
-  --field body="✅ Fixed in ACTUAL_HASH. <describe what was actually changed>" \
-  --field in_reply_to=ACTUAL_COMMENT_ID
+FIX_HASH=$(git rev-parse --short HEAD)
 ```
 
-Reply to a general PR comment (note: GitHub API creates a new top-level comment, not a threaded reply — this is an API limitation):
+Then for each comment, reply using the shell variable `$FIX_HASH` and the literal numeric `id` from Step 5's fetch:
 ```bash
+# Reply to inline review comment
+gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
+  --method POST \
+  --field body="✅ Fixed in $FIX_HASH. <describe what was actually changed>" \
+  --field in_reply_to=$COMMENT_ID
+
+# Reply to general PR comment (note: GitHub API creates a new top-level comment, not a threaded reply — this is an API limitation)
 gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
   --method POST \
-  --field body="✅ Addressed in ACTUAL_HASH. <describe what was actually changed>"
+  --field body="✅ Addressed in $FIX_HASH. <describe what was actually changed>"
 ```
 
 Reply format:
@@ -501,7 +498,7 @@ done
 
 # Step 10: Merge PR
 echo "🔀 Merging PR #$PR_NUMBER..."
-gh pr merge $PR_NUMBER --squash --delete-branch --subject "✨ feat: brief description"
+gh pr merge $PR_NUMBER --squash --delete-branch
 
 # Step 11: Cleanup
 echo "🧹 Cleaning up..."

@@ -90,26 +90,23 @@ git push
 
 2. **Reply to each review comment** explaining what was done.
 
-**⚠️ CRITICAL variable substitution rules:**
-
-You MUST substitute actual values. NEVER use template variables or bash substitution syntax literally in the reply body.
-
-- Run `git rev-parse --short HEAD` and capture the ACTUAL short hash (e.g., `a3f7b2c`). Use that literal value in the reply.
-- Use the ACTUAL numeric comment `id` from Phase 2. Use the literal number.
-
-Reply to an inline review comment (substitute `ACTUAL_HASH` with the real hash, `ACTUAL_COMMENT_ID` with the real numeric ID from Phase 2):
+Before replying, compute the fix hash:
 ```bash
-gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
-  --method POST \
-  --field body="✅ Fixed in ACTUAL_HASH. <Describe what was actually changed>" \
-  --field in_reply_to=ACTUAL_COMMENT_ID
+FIX_HASH=$(git rev-parse --short HEAD)
 ```
 
-Reply to a general PR comment (note: this creates a new top-level comment, not a threaded reply — this is a GitHub API limitation):
+Then for each comment, reply using the shell variable `$FIX_HASH` and the literal numeric `id` from Phase 2:
 ```bash
+# Reply to inline review comment (use the real comment id from the fetch step)
+gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
+  --method POST \
+  --field body="✅ Fixed in $FIX_HASH. <describe what was actually changed>" \
+  --field in_reply_to=$COMMENT_ID
+
+# Reply to general PR comment (note: this creates a new top-level comment — GitHub API limitation)
 gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
   --method POST \
-  --field body="✅ Addressed in ACTUAL_HASH. <Describe what was actually changed>"
+  --field body="✅ Addressed in $FIX_HASH. <describe what was actually changed>"
 ```
 
 Reply format:
