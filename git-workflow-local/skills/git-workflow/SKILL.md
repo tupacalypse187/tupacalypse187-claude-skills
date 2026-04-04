@@ -25,6 +25,8 @@ This skill automates the complete feature development workflow:
 10. **Merge PR** (squash + delete branch)
 11. **Cleanup** local and remote branches
 
+**⚠️ MANDATORY:** When executing the full workflow, ALL 11 steps MUST execute sequentially. Do NOT stop after creating the PR (Step 4). Steps 5-11 (review, remediation, merge, cleanup) are mandatory parts of the flow, not optional follow-ups. Continue from each step to the next without stopping.
+
 ---
 
 ## Triggering the Skill
@@ -137,38 +139,40 @@ git push -u origin feat/descriptive-name
 
 ## Step 4: Create PR with Structured Template
 
+### Before creating the PR, analyze the actual changes:
+
+```bash
+# See all changes in this branch vs main
+git diff main...HEAD
+
+# See commit messages
+git log main..HEAD --pretty=format:"%s"
+```
+
+**You MUST generate the PR title and body from the actual diff — never use placeholder text.**
+
+- **Title:** Use the emoji and type from the primary commit (e.g., `✨ feat:`, `🐛 fix:`). Include the emoji.
+- **Body:** Fill every section with REAL content derived from the diff. Do NOT write `[One-line summary]` or `[First change]` — write actual descriptions of the real changes.
+
 ```bash
 gh pr create \
-  --title "✨ feat: brief description" \
-  --body "$(cat <<'EOF'
+  --title "<EMOJI> <TYPE>: <brief description>" \
+  --body "$(cat <<EOF
 ## 📝 Summary
 
-[One-line summary of what this PR does and why]
+[Write a REAL one-sentence summary based on the actual diff]
 
 ## 🔄 Changes
 
-- [First change with bullet point]
-- [Second change]
-- [Third change]
+[List each meaningful change as a bullet point with an emoji prefix. Base on git diff output]
 
 ## ✅ Verification
 
-[How to verify this change works]
-
-```bash
-# Example verification steps
-npm test
-npm run build
-# Or manual testing steps
-```
+[Provide specific, runnable verification steps based on what actually changed]
 
 ## 🔗 Sources
 
-[Include any relevant links:
-- Issue references: Closes #123
-- Documentation links
-- Related PRs
-- Design docs]
+[Include relevant links: issue references (Closes #N), docs, related PRs. Omit section if none exist]
 
 ---
 
@@ -310,17 +314,25 @@ After all fixes are committed:
 ```bash
 # Push all fix commits
 git push
+```
 
+Before replying, compute the fix hash:
+```bash
+FIX_HASH=$(git rev-parse --short HEAD)
+```
+
+Then for each comment, reply using the shell variable `$FIX_HASH` and the literal numeric `id` from Step 5's fetch:
+```bash
 # Reply to inline review comment
 gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments \
   --method POST \
-  --field body="✅ Fixed in $(git rev-parse --short HEAD). <what changed>" \
-  --field in_reply_to=<comment_id>
+  --field body="✅ Fixed in $FIX_HASH. <describe what was actually changed>" \
+  --field in_reply_to=$COMMENT_ID
 
-# Reply to general PR comment
+# Reply to general PR comment (note: GitHub API creates a new top-level comment, not a threaded reply — this is an API limitation)
 gh api repos/$REPO_SLUG/issues/$PR_NUMBER/comments \
   --method POST \
-  --field body="✅ Addressed. <what changed>"
+  --field body="✅ Addressed in $FIX_HASH. <describe what was actually changed>"
 ```
 
 Reply format:
@@ -393,8 +405,10 @@ exit 1
 ## Step 10: Merge PR (Squash + Delete Branch)
 
 ```bash
-gh pr merge <PR_NUMBER> --squash --delete-branch --subject "✨ feat: brief description"
+gh pr merge <PR_NUMBER> --squash --delete-branch
 ```
+
+**Note:** Omitting `--subject` lets GitHub default to the PR title, which already has the correct emoji/type prefix.
 
 **Merge options:**
 - `--squash` - Combine all commits into one (recommended)
@@ -440,9 +454,12 @@ REPO_SLUG=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 echo "⏳ Waiting 120 seconds for code reviews..."
 sleep 180
 
-# Step 6-8: Remediation loop
+# Step 6-8: Remediation loop (max 5 iterations)
 PROCESSED_IDS=""
-while true; do
+MAX_ITERATIONS=5
+iteration=0
+while [ $iteration -lt $MAX_ITERATIONS ]; do
+  iteration=$((iteration + 1))
   COMMENT_IDS=$(gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments --jq '.[] | select(.in_reply_to_id == null) | .id')
   NEW_IDS=$(comm -23 <(echo "$COMMENT_IDS" | sort) <(echo "$PROCESSED_IDS" | sort) || true)
 
@@ -462,6 +479,10 @@ ${NEW_IDS}"
   sleep 60
 done
 
+if [ $iteration -ge $MAX_ITERATIONS ]; then
+  echo "⚠️ Maximum remediation iterations reached. Manual review may be needed."
+fi
+
 # Step 9: Monitor PR status
 echo "🔍 Monitoring PR #$PR_NUMBER status..."
 HEAD_BRANCH=$(gh pr view $PR_NUMBER --json headRefName --jq '.headRefName')
@@ -479,7 +500,7 @@ done
 
 # Step 10: Merge PR
 echo "🔀 Merging PR #$PR_NUMBER..."
-gh pr merge $PR_NUMBER --squash --delete-branch --subject "feat: brief description"
+gh pr merge $PR_NUMBER --squash --delete-branch
 
 # Step 11: Cleanup
 echo "🧹 Cleaning up..."
