@@ -35,6 +35,7 @@ pr-monitor-merge.sh                    # Standalone bash script for PR polling/a
 - **PR Template** — Sections: Summary, Changes, Verification, Sources, plus Claude Code attribution footer.
 - **Squash Merging** — PRs merged with `--squash --delete-branch`. Never commit directly to the default branch.
 - **Co-authored-by** — AI-assisted commits include `Co-authored-by: Claude <noreply@anthropic.com>`.
+- **Version Bumping** — Before pushing any PR that modifies plugin files (`commands/`, `skills/`, `.claude-plugin/`), increment the `version` field in both `.claude-plugin/marketplace.json` and `git-workflow-local/.claude-plugin/plugin.json` using semver (e.g., `1.1.0` → `1.2.0`). Claude Code uses the version to determine if an update is needed — without a bump, users won't receive the changes.
 
 ## Development
 
