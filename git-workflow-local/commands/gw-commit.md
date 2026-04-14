@@ -48,7 +48,7 @@ git add .
 # Create commit (example)
 git commit -m "✨ feat: add user authentication
 
-Co-authored-by: Claude Opus 4.6 <noreply@anthropic.com>"
+Co-authored-by: Claude <noreply@anthropic.com>"
 ```
 
 ## Auto-detection Rules

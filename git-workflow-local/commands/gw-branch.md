@@ -1,5 +1,5 @@
 ---
-description: Create a new feature branch from main
+description: Create a new feature branch from the default branch
 arguments:
   - name: name
     description: Branch name (without feat/ prefix)
@@ -8,7 +8,7 @@ arguments:
 
 # Git Workflow: Create Feature Branch
 
-This command creates a new feature branch from main with proper naming convention.
+This command creates a new feature branch from the default branch with proper naming convention.
 
 ## Branch Naming Convention
 
@@ -23,8 +23,8 @@ This command creates a new feature branch from main with proper naming conventio
 
 ## Instructions
 
-1. Switch to main branch
-2. Pull latest changes
+1. Detect the default branch name
+2. Switch to the default branch and pull
 3. Create new branch with proper prefix
 4. Show confirmation
 
@@ -40,8 +40,9 @@ if [ -z "$BRANCH_NAME" ]; then
   exit 1
 fi
 
-# Ensure on main and up to date
-git checkout main
+# Detect default branch and ensure up to date
+DEFAULT_BRANCH=$(git remote show origin 2>/dev/null | grep 'HEAD branch' | sed 's/.*: //' || echo "main")
+git checkout "$DEFAULT_BRANCH"
 git pull
 
 # Determine prefix based on name or default to feat/

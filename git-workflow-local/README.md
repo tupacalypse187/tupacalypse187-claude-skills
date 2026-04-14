@@ -4,11 +4,11 @@ Complete git workflow automation plugin for Claude Code — branch creation, emo
 
 ## Installation
 
-### Option 1: CLI (Recommended)
+### Option 1: From GitHub (Recommended)
 
 ```bash
-# Add this directory as a marketplace source
-claude plugin marketplace add /path/to/git-workflow-local
+# Add this repo as a marketplace source
+claude plugin marketplace add tupacalypse187/tupacalypse187-claude-skills
 
 # Install the plugin
 claude plugin install git-workflow@git-workflow-local
@@ -17,14 +17,15 @@ claude plugin install git-workflow@git-workflow-local
 ### Option 2: From a Claude Code session
 
 ```
-/plugin marketplace add /path/to/git-workflow-local
+/plugin marketplace add tupacalypse187/tupacalypse187-claude-skills
 /plugin install git-workflow@git-workflow-local
 ```
 
-### Option 3: Manual copy
+### Option 3: From local clone
 
 ```bash
-cp -r git-workflow-local ~/.claude/plugins/marketplaces/git-workflow-local
+claude plugin marketplace add /path/to/this-repo
+claude plugin install git-workflow@git-workflow-local
 ```
 
 ### Updating
@@ -58,7 +59,7 @@ Simply talk to Claude Code in natural language! Here are practical examples:
 4. Create PR with structured template
 5. Wait for code reviews, evaluate and fix any feedback
 6. Monitor checks and merge when clean
-7. Clean up branches and sync main
+7. Clean up branches and sync the default branch
 
 ---
 
@@ -69,7 +70,7 @@ Simply talk to Claude Code in natural language! Here are practical examples:
 
 **Claude will:**
 ```bash
-git checkout main && git pull
+git checkout <default-branch> && git pull
 git checkout -b feat/user-authentication
 ```
 
@@ -128,7 +129,7 @@ Add OAuth2 login flow...
 - Check PR status every 10 seconds
 - When status is `CLEAN`, merge with squash
 - Delete remote branch
-- Switch to main and pull
+- Switch to the default branch and pull
 - Delete local feature branch
 
 ---
@@ -140,7 +141,7 @@ For quicker access, you can also use slash commands (prefixed with `gw-` for Git
 | Command | Description | Example |
 |---------|-------------|---------|
 | `/gw-flow` | Complete workflow (branch → commit → push → PR → review → merge) | `/gw-flow Add user authentication` |
-| `/gw-branch` | Create a new feature branch from main | `/gw-branch user-authentication` |
+| `/gw-branch` | Create a new feature branch | `/gw-branch user-authentication` |
 | `/gw-commit` | Stage and commit changes with emoji | `/gw-commit` (prompts for message) |
 | `/gw-pr` | Create a pull request with template | `/gw-pr "feat: Add authentication"` |
 | `/gw-remediate` | Poll for review comments, fix, push, and reply | `/gw-remediate 13` or `/gw-remediate 13 180` |
@@ -195,10 +196,11 @@ When creating PRs, Claude uses this structure:
 
 A standalone bash script is included at the repo root (`pr-monitor-merge.sh`) for use outside Claude Code:
 
+- Detects the default branch automatically
 - Checks PR status every 10 seconds (up to 10 minutes)
 - Auto-merges when all checks pass (`CLEAN` status)
 - Squashes commits and deletes remote branch
-- Returns to main and pulls latest changes
+- Returns to the default branch and pulls latest changes
 
 **Usage:**
 ```bash

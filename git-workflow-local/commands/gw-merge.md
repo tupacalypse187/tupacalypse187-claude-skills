@@ -19,7 +19,7 @@ This command monitors a PR for check completion and automatically merges when al
 2. Poll PR status every 10 seconds (up to 10 minutes)
 3. When status is `CLEAN`, merge with squash
 4. Delete remote branch
-5. Switch to main and pull
+5. Switch to the default branch and pull
 6. Delete local feature branch
 
 ## Status Values
@@ -35,6 +35,9 @@ This command monitors a PR for check completion and automatically merges when al
 ## Commands
 
 ```bash
+# Detect default branch
+DEFAULT_BRANCH=$(git remote show origin 2>/dev/null | grep 'HEAD branch' | sed 's/.*: //' || echo "main")
+
 # Get PR head branch name for cleanup
 HEAD_BRANCH=$(gh pr view $PR_NUMBER --json headRefName --jq '.headRefName')
 
@@ -49,7 +52,7 @@ for i in {1..60}; do
 
   if [ "$pr_status" = "MERGED" ]; then
     echo "✅ PR already merged!"
-    git checkout main && git pull
+    git checkout "$DEFAULT_BRANCH" && git pull
     exit 0
   fi
 
@@ -76,8 +79,8 @@ else
   gh pr merge $PR_NUMBER --squash --delete-branch
 fi
 
-# Update main
-git checkout main
+# Update default branch
+git checkout "$DEFAULT_BRANCH"
 git pull
 
 # Delete local feature branch

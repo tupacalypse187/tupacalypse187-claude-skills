@@ -9,13 +9,14 @@ This is a **Claude Code plugin** (`git-workflow`) that automates the full featur
 ## Architecture
 
 ```
+.claude-plugin/
+│   └── marketplace.json               # Marketplace listing config (at repo root)
 git-workflow-local/                    # The plugin directory
 ├── .claude-plugin/
-│   ├── plugin.json                    # Plugin metadata (only this goes in .claude-plugin/)
-│   └── marketplace.json               # Marketplace listing config
+│   └── plugin.json                    # Plugin metadata (only this goes in .claude-plugin/)
 ├── commands/                          # At plugin root, NOT inside .claude-plugin/
 │   ├── gw-flow.md                     # /gw-flow — full workflow (branch→commit→push→PR→review→merge)
-│   ├── gw-branch.md                   # /gw-branch — create feature branch from main
+│   ├── gw-branch.md                   # /gw-branch — create feature branch from the default branch
 │   ├── gw-commit.md                   # /gw-commit — emoji conventional commit
 │   ├── gw-pr.md                       # /gw-pr — create PR with structured template
 │   ├── gw-remediate.md                # /gw-remediate — poll reviews, fix, push, reply
@@ -32,20 +33,24 @@ pr-monitor-merge.sh                    # Standalone bash script for PR polling/a
 - **Emoji Conventional Commits** — Format: `emoji type[optional scope]: description` (e.g., `✨ feat: add feature`, `🐛 fix(scope): description`). Each type has a specific emoji prefix.
 - **Branch Naming** — Prefixes: `feat/`, `fix/`, `docs/`, `refactor/`, `perf/`, `test/`, `chore/`, `ci/`.
 - **PR Template** — Sections: Summary, Changes, Verification, Sources, plus Claude Code attribution footer.
-- **Squash Merging** — PRs merged with `--squash --delete-branch`. Never commit directly to main.
-- **Co-authored-by** — AI-assisted commits include `Co-authored-by: Claude Opus 4.6 <noreply@anthropic.com>`.
+- **Squash Merging** — PRs merged with `--squash --delete-branch`. Never commit directly to the default branch.
+- **Co-authored-by** — AI-assisted commits include `Co-authored-by: Claude <noreply@anthropic.com>`.
 
 ## Development
 
 There is no build system, test suite, or linting. All plugin components are markdown files. To test changes:
 
 ```bash
-# Install/update the plugin from local source
-claude plugin marketplace add /path/to/this-repo/git-workflow-local
-claude plugin update git-workflow@git-workflow-local
+# Install from GitHub (recommended)
+claude plugin marketplace add tupacalypse187/tupacalypse187-claude-skills
+claude plugin install git-workflow@git-workflow-local
+
+# Or from local source for development
+claude plugin marketplace add /path/to/this-repo
+claude plugin install git-workflow@git-workflow-local
 
 # Or from within a Claude Code session
-/plugin marketplace add /path/to/this-repo/git-workflow-local
+/plugin marketplace add tupacalypse187/tupacalypse187-claude-skills
 /reload-plugins
 ```
 

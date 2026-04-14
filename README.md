@@ -1,4 +1,4 @@
-# tupacalypse187-claude-skills
+# Claude Code Skills
 
 Collection of Claude Code skills, plugins, and tools.
 
@@ -8,10 +8,10 @@ Collection of Claude Code skills, plugins, and tools.
 
 Complete git workflow automation with emoji-based conventional commits, PR creation, review remediation, and merge monitoring.
 
-**Install:**
+**Install from GitHub (Recommended):**
 ```bash
-# Add this repo's plugin directory as a marketplace
-claude plugin marketplace add /path/to/tupacalypse187-claude-skills/git-workflow-local
+# Add this repo as a marketplace source
+claude plugin marketplace add tupacalypse187/tupacalypse187-claude-skills
 
 # Install the plugin
 claude plugin install git-workflow@git-workflow-local
@@ -19,8 +19,14 @@ claude plugin install git-workflow@git-workflow-local
 
 **Or from within a Claude Code session:**
 ```
-/plugin marketplace add /path/to/tupacalypse187-claude-skills/git-workflow-local
+/plugin marketplace add tupacalypse187/tupacalypse187-claude-skills
 /plugin install git-workflow@git-workflow-local
+```
+
+**Install from local clone:**
+```bash
+claude plugin marketplace add /path/to/this-repo
+claude plugin install git-workflow@git-workflow-local
 ```
 
 **Update after changes:**
