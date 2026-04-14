@@ -10,7 +10,7 @@
       "name": "git-workflow",
       "source": "./git-workflow-local",
       "description": "Complete git workflow automation skill for feature branch, PR creation, review, and merge cycles with emoji conventional commits and markdown PR templates.",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "cyantorno",
         "url": "https://github.com/tupacalypse187"
