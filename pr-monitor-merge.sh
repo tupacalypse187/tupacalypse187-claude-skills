@@ -4,6 +4,9 @@
 
 set -e
 
+# Detect default branch
+DEFAULT_BRANCH=$(git remote show origin 2>/dev/null | grep 'HEAD branch' | sed 's/.*: //' || echo "main")
+
 PR_NUMBER="${1:-}"
 COMMIT_SUBJECT="${2:-}"
 
@@ -35,8 +38,8 @@ for i in {1..60}; do
     fi
 
     echo ""
-    echo "📥 Updating main branch..."
-    git checkout main
+    echo "📥 Updating $DEFAULT_BRANCH branch..."
+    git checkout "$DEFAULT_BRANCH"
     git pull
 
     if [ -n "$HEAD_BRANCH" ]; then
@@ -51,7 +54,7 @@ for i in {1..60}; do
 
   if [ "$pr_status" = "MERGED" ]; then
     echo "✅ PR already merged!"
-    git checkout main
+    git checkout "$DEFAULT_BRANCH"
     git pull
     exit 0
   fi

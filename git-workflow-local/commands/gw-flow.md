@@ -29,7 +29,8 @@ You MUST execute ALL 6 steps sequentially without stopping. Do NOT stop after cr
 > After creating the branch, immediately proceed to Step 2.
 
 ```bash
-git checkout main && git pull
+DEFAULT_BRANCH=$(git remote show origin 2>/dev/null | grep 'HEAD branch' | sed 's/.*: //' || echo "main")
+git checkout "$DEFAULT_BRANCH" && git pull
 BRANCH_NAME="feat/$(echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')"
 git checkout -b "$BRANCH_NAME"
 ```
@@ -70,11 +71,11 @@ git push -u origin "$BRANCH_NAME"
 **Before creating the PR, analyze the actual changes:**
 
 ```bash
-# See all changes in this branch vs main
-git diff main...HEAD
+# See all changes in this branch vs the default branch
+git diff "$DEFAULT_BRANCH"...HEAD
 
 # See commit messages
-git log main..HEAD --pretty=format:"%s"
+git log "$DEFAULT_BRANCH"..HEAD --pretty=format:"%s"
 ```
 
 Use the same emoji/type from Step 2 for the PR title. Generate the PR body with REAL content from the diff — never use placeholder text.
@@ -183,7 +184,7 @@ for i in {1..60}; do
   if [ "$pr_status" = "CLEAN" ]; then
     echo "✅ All checks passed!"
     gh pr merge $PR_NUMBER --squash --delete-branch --subject "<EMOJI> <TYPE>: $1"
-    git checkout main && git pull
+    git checkout "$DEFAULT_BRANCH" && git pull
     git branch -D "$HEAD_BRANCH" 2>/dev/null || true
     break
   fi

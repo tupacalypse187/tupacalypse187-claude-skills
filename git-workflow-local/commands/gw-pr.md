@@ -25,11 +25,14 @@ This command creates a GitHub pull request with a structured template using emoj
 You MUST analyze the actual changes before generating the PR title and body:
 
 ```bash
-# See all changes in this branch vs main
-git diff main...HEAD
+# Detect default branch
+DEFAULT_BRANCH=$(git remote show origin 2>/dev/null | grep 'HEAD branch' | sed 's/.*: //' || echo "main")
+
+# See all changes in this branch vs the default branch
+git diff "$DEFAULT_BRANCH"...HEAD
 
 # See commit messages
-git log main..HEAD --pretty=format:"%s"
+git log "$DEFAULT_BRANCH"..HEAD --pretty=format:"%s"
 ```
 
 ## PR Title Rules
@@ -86,7 +89,7 @@ gh pr create $DRAFT_FLAG --title "$TITLE" --body "$(cat <<'EOF'
 
 ## 🔄 Changes
 
-[List each meaningful change as a bullet point with emoji prefix. These MUST come from analyzing git diff main...HEAD]
+[List each meaningful change as a bullet point with emoji prefix. These MUST come from analyzing git diff against the default branch]
 
 ## ✅ Verification
 

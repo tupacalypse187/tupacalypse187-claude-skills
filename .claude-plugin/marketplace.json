@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "git-workflow",
-      "source": "./",
+      "source": "./git-workflow-local",
       "description": "Complete git workflow automation skill for feature branch, PR creation, review, and merge cycles with emoji conventional commits and markdown PR templates.",
       "version": "1.1.0",
       "author": {
@@ -26,8 +26,8 @@
         "github",
         "feature-branch"
       ],
-      "homepage": "https://github.com/tupacalypse187",
-      "repository": "https://github.com/tupacalypse187",
+      "homepage": "https://github.com/tupacalypse187/tupacalypse187-claude-skills",
+      "repository": "https://github.com/tupacalypse187/tupacalypse187-claude-skills",
       "license": "MIT"
     }
   ]

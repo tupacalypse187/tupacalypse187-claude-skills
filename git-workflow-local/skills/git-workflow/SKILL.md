@@ -13,7 +13,7 @@ Complete git workflow automation for feature development lifecycle from branch c
 
 This skill automates the complete feature development workflow:
 
-1. **Create feature branch** from main
+1. **Create feature branch** from the default branch
 2. **Commit changes** with emoji conventional commits
 3. **Push to remote**
 4. **Create PR** with structured markdown template
@@ -55,8 +55,10 @@ Use natural language to invoke any part of the workflow:
 ## Step 1: Create Feature Branch
 
 ```bash
-git checkout main
-git pull origin main
+# Detect the default branch (main, master, etc.)
+DEFAULT_BRANCH=$(git remote show origin 2>/dev/null | grep 'HEAD branch' | sed 's/.*: //' || echo "main")
+git checkout "$DEFAULT_BRANCH"
+git pull origin "$DEFAULT_BRANCH"
 git checkout -b feat/descriptive-name
 ```
 
@@ -115,7 +117,7 @@ Implement JWT token validation middleware that:
 This improves security by ensuring all protected routes
 validate authentication tokens properly.
 
-Co-authored-by: Claude Opus 4.6 <noreply@anthropic.com>
+Co-authored-by: Claude <noreply@anthropic.com>
 ```
 
 ### Best Practices
@@ -142,11 +144,11 @@ git push -u origin feat/descriptive-name
 ### Before creating the PR, analyze the actual changes:
 
 ```bash
-# See all changes in this branch vs main
-git diff main...HEAD
+# See all changes in this branch vs the default branch
+git diff "$DEFAULT_BRANCH"...HEAD
 
 # See commit messages
-git log main..HEAD --pretty=format:"%s"
+git log "$DEFAULT_BRANCH"..HEAD --pretty=format:"%s"
 ```
 
 **You MUST generate the PR title and body from the actual diff — never use placeholder text.**
@@ -421,11 +423,11 @@ gh pr merge <PR_NUMBER> --squash --delete-branch
 ## Step 11: Cleanup Local and Remote Branches
 
 ```bash
-# Switch back to main
-git checkout main
+# Switch back to the default branch
+git checkout "$DEFAULT_BRANCH"
 
 # Pull latest changes
-git pull origin main
+git pull origin "$DEFAULT_BRANCH"
 
 # Delete local branch
 git branch -d feat/descriptive-name
@@ -504,8 +506,8 @@ gh pr merge $PR_NUMBER --squash --delete-branch
 
 # Step 11: Cleanup
 echo "🧹 Cleaning up..."
-git checkout main
-git pull origin main
+git checkout "$DEFAULT_BRANCH"
+git pull origin "$DEFAULT_BRANCH"
 git branch -D "$HEAD_BRANCH" 2>/dev/null || true
 echo "✅ Done! Ready for next feature."
 ```
@@ -517,7 +519,7 @@ echo "✅ Done! Ready for next feature."
 ### Branch Operations
 ```bash
 git checkout -b feat/feature-name    # Create feature branch
-git checkout main && git pull        # Sync with main
+git checkout "$DEFAULT_BRANCH" && git pull  # Sync with default branch
 git branch -d feat/feature-name      # Delete local branch
 git push origin --delete feat/...    # Delete remote branch
 ```
@@ -548,13 +550,13 @@ gh pr view <number> --json status    # Get PR status JSON
 
 ## Important Notes
 
-- **NEVER commit directly to main** unless explicitly instructed
+- **NEVER commit directly to the default branch** unless explicitly instructed
 - **Always use feature branches** for changes
 - **Write meaningful commit messages** with emoji prefixes
 - **Keep PRs focused** on a single change
 - **Address all review comments** before requesting merge
 - **Wait for CI to pass** before merging
-- **Squash merges** keep main history clean
+- **Squash merges** keep the default branch history clean
 - **Delete branches** after merging to keep repo clean
 
 ---
@@ -566,10 +568,10 @@ gh pr view <number> --json status    # Get PR status JSON
 
 **Solution**:
 ```bash
-git checkout main
-git pull origin main
+git checkout "$DEFAULT_BRANCH"
+git pull origin "$DEFAULT_BRANCH"
 git checkout feat/your-branch
-git merge main
+git merge "$DEFAULT_BRANCH"
 # Resolve conflicts
 git add .
 git commit -m "🔧 chore: resolve merge conflicts"
@@ -581,10 +583,10 @@ git push
 
 **Solution**:
 ```bash
-git checkout main
-git pull origin main
+git checkout "$DEFAULT_BRANCH"
+git pull origin "$DEFAULT_BRANCH"
 git checkout feat/your-branch
-git merge main
+git merge "$DEFAULT_BRANCH"
 git push
 ```
 
