@@ -37,6 +37,25 @@ pr-monitor-merge.sh                    # Standalone bash script for PR polling/a
 - **Co-authored-by** — AI-assisted commits include `Co-authored-by: Claude <noreply@anthropic.com>`.
 - **Version Bumping** — Before pushing any PR that modifies plugin files (`commands/`, `skills/`, `.claude-plugin/`), increment the `version` field in both `.claude-plugin/marketplace.json` and `git-workflow-local/.claude-plugin/plugin.json` using semver (e.g., `1.1.0` → `1.2.0`). Claude Code uses the version to determine if an update is needed — without a bump, users won't receive the changes.
 
+## Zread Wiki
+
+The `.zread/` directory contains a generated project wiki from [Zread CLI](https://zread.ai/cli). It is tracked in git so it syncs across devices.
+
+**Updating the wiki:**
+```bash
+zread generate
+```
+
+**Before committing an update**, prune old version snapshots so only the latest remains — git history already tracks changes over time:
+```bash
+# Keep only the latest version folder
+cd .zread/wiki/versions
+latest=$(ls -d */ | sort | tail -1)
+for d in */; do [ "$d" != "$latest" ] && rm -rf "$d"; done
+```
+
+**What to commit:** `wiki/current` (pointer to latest version) + the single versioned snapshot folder. `wiki/drafts/` is gitignored (in-progress generation artifacts).
+
 ## Development
 
 There is no build system, test suite, or linting. All plugin components are markdown files. To test changes:

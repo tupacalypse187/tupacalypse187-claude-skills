@@ -1,0 +1,4 @@
+eng.traineddata
+
+# Zread CLI in-progress drafts (keep current + versions)
+.zread/wiki/drafts/
