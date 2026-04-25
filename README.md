@@ -40,6 +40,18 @@ claude plugin update git-workflow@git-workflow-local
 
 See [git-workflow-local/README.md](git-workflow-local/README.md) for full documentation.
 
+## Project Wiki (Zread)
+
+This repo includes a generated wiki from [Zread CLI](https://zread.ai/cli) in `.zread/`. It provides structured, browsable documentation of the project.
+
+To regenerate after changes:
+```bash
+zread generate
+zread browse   # open in browser
+```
+
+See [CLAUDE.md](CLAUDE.md) for version management conventions.
+
 ## Scripts
 
 ### pr-monitor-merge.sh

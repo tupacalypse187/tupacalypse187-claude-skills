@@ -1,0 +1,132 @@
+{
+  "id": "2026-04-24-193452",
+  "generated_at": "2026-04-24T23:34:52.039466Z",
+  "language": "en",
+  "pages": [
+    {
+      "slug": "1-overview-what-this-project-does-and-why-it-matters",
+      "title": "Overview: What This Project Does and Why It Matters",
+      "file": "1-overview-what-this-project-does-and-why-it-matters.md",
+      "section": "Get Started",
+      "level": "Beginner"
+    },
+    {
+      "slug": "2-quick-start-installing-and-using-the-git-workflow-plugin",
+      "title": "Quick Start: Installing and Using the Git Workflow Plugin",
+      "file": "2-quick-start-installing-and-using-the-git-workflow-plugin.md",
+      "section": "Get Started",
+      "level": "Beginner"
+    },
+    {
+      "slug": "3-triggering-workflows-with-natural-language",
+      "title": "Triggering Workflows with Natural Language",
+      "file": "3-triggering-workflows-with-natural-language.md",
+      "section": "Get Started",
+      "level": "Beginner"
+    },
+    {
+      "slug": "4-slash-commands-quick-reference",
+      "title": "Slash Commands Quick Reference",
+      "file": "4-slash-commands-quick-reference.md",
+      "section": "Get Started",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "5-repository-architecture-and-plugin-structure",
+      "title": "Repository Architecture and Plugin Structure",
+      "file": "5-repository-architecture-and-plugin-structure.md",
+      "section": "Deep Dive",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "6-marketplace-configuration-and-plugin-metadata",
+      "title": "Marketplace Configuration and Plugin Metadata",
+      "file": "6-marketplace-configuration-and-plugin-metadata.md",
+      "section": "Deep Dive",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "7-branch-creation-and-naming-conventions",
+      "title": "Branch Creation and Naming Conventions",
+      "file": "7-branch-creation-and-naming-conventions.md",
+      "section": "Deep Dive",
+      "group": "The 11-Step Feature Development Workflow",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "8-emoji-conventional-commits-types-format-and-best-practices",
+      "title": "Emoji Conventional Commits: Types, Format, and Best Practices",
+      "file": "8-emoji-conventional-commits-types-format-and-best-practices.md",
+      "section": "Deep Dive",
+      "group": "The 11-Step Feature Development Workflow",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "9-creating-pull-requests-with-structured-templates",
+      "title": "Creating Pull Requests with Structured Templates",
+      "file": "9-creating-pull-requests-with-structured-templates.md",
+      "section": "Deep Dive",
+      "group": "The 11-Step Feature Development Workflow",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "10-review-remediation-polling-categorizing-and-fixing-feedback",
+      "title": "Review Remediation: Polling, Categorizing, and Fixing Feedback",
+      "file": "10-review-remediation-polling-categorizing-and-fixing-feedback.md",
+      "section": "Deep Dive",
+      "group": "The 11-Step Feature Development Workflow",
+      "level": "Advanced"
+    },
+    {
+      "slug": "11-pr-status-monitoring-and-automated-merge",
+      "title": "PR Status Monitoring and Automated Merge",
+      "file": "11-pr-status-monitoring-and-automated-merge.md",
+      "section": "Deep Dive",
+      "group": "The 11-Step Feature Development Workflow",
+      "level": "Advanced"
+    },
+    {
+      "slug": "12-post-merge-branch-cleanup",
+      "title": "Post-Merge Branch Cleanup",
+      "file": "12-post-merge-branch-cleanup.md",
+      "section": "Deep Dive",
+      "group": "The 11-Step Feature Development Workflow",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "13-the-standalone-pr-monitor-script-pr-monitor-merge-sh",
+      "title": "The Standalone PR Monitor Script (pr-monitor-merge.sh)",
+      "file": "13-the-standalone-pr-monitor-script-pr-monitor-merge-sh.md",
+      "section": "Deep Dive",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "14-github-cli-gh-commands-used-throughout-the-workflow",
+      "title": "GitHub CLI (gh) Commands Used Throughout the Workflow",
+      "file": "14-github-cli-gh-commands-used-throughout-the-workflow.md",
+      "section": "Deep Dive",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "15-co-authored-by-attribution-and-ai-assisted-commit-conventions",
+      "title": "Co-authored-by Attribution and AI-Assisted Commit Conventions",
+      "file": "15-co-authored-by-attribution-and-ai-assisted-commit-conventions.md",
+      "section": "Deep Dive",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "16-troubleshooting-merge-conflicts-behind-branch-hook-failures",
+      "title": "Troubleshooting: Merge Conflicts, Behind Branch, Hook Failures",
+      "file": "16-troubleshooting-merge-conflicts-behind-branch-hook-failures.md",
+      "section": "Deep Dive",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "17-version-bumping-and-development-workflow",
+      "title": "Version Bumping and Development Workflow",
+      "file": "17-version-bumping-and-development-workflow.md",
+      "section": "Deep Dive",
+      "level": "Intermediate"
+    }
+  ]
+}
