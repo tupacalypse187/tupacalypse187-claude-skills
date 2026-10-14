@@ -1,13 +1,19 @@
-# Claude Code Skills
+# 🧩 Claude Code Skills
 
 Personal collection of Claude Code skills, plugins, and tools.
 
 **Status:** dormant — last updated April 2026. Currently contains a
 single plugin (Git Workflow, below); no further skills are in progress.
 
-## Contents
+## 📑 Table of Contents
 
-### Git Workflow Plugin
+- [📑 Contents](#-contents)
+- [📖 Project wiki (Zread)](#-project-wiki-zread)
+- [📄 License](#-license)
+
+## 📑 Contents
+
+### 🔄 Git Workflow Plugin
 
 Complete git workflow automation with emoji-based conventional commits,
 PR creation, review remediation, and merge monitoring.
@@ -52,7 +58,7 @@ Full documentation:
 - [git-workflow-local/README.md](git-workflow-local/README.md) — plugin overview and setup
 - [git-workflow-local/skills/git-workflow/SKILL.md](git-workflow-local/skills/git-workflow/SKILL.md) — the skill definition itself
 
-### pr-monitor-merge.sh
+### 🔀 pr-monitor-merge.sh
 
 Standalone bash script for monitoring and merging a PR once all checks
 pass.
@@ -62,7 +68,7 @@ chmod +x pr-monitor-merge.sh
 ./pr-monitor-merge.sh <pr-number> [commit-message]
 ```
 
-## Project wiki (Zread)
+## 📖 Project wiki (Zread)
 
 This repo includes a generated wiki from the
 [Zread CLI](https://zread.ai/cli) in `.zread/` — structured, browsable
@@ -75,6 +81,6 @@ zread browse   # open in browser
 
 See [CLAUDE.md](CLAUDE.md) for version management conventions.
 
-## License
+## 📄 License
 
 MIT

@@ -9,18 +9,18 @@ arguments:
     required: false
 ---
 
-# Git Workflow: Create Pull Request
+# 📬 Git Workflow: Create Pull Request
 
 This command creates a GitHub pull request with a structured template using emoji commits style.
 
-## Instructions
+## 📋 Instructions
 
 1. Analyze the actual changes in the branch
 2. Generate PR title with appropriate emoji
 3. Generate PR body with real diff-based content
 4. Create PR using `gh pr create`
 
-## Before Creating the PR
+## 📋 Before Creating the PR
 
 You MUST analyze the actual changes before generating the PR title and body:
 
@@ -35,7 +35,7 @@ git diff "$DEFAULT_BRANCH"...HEAD
 git log "$DEFAULT_BRANCH"..HEAD --pretty=format:"%s"
 ```
 
-## PR Title Rules
+## 📌 PR Title Rules
 
 The PR title MUST include an emoji prefix. Determine the correct emoji from the diff analysis:
 
@@ -56,7 +56,7 @@ The PR title MUST include an emoji prefix. Determine the correct emoji from the 
 - If the user provides a title without an emoji, add the appropriate emoji and type prefix
 - If no title is provided, derive it from the commit history and ensure it has an emoji prefix
 
-## Commands
+## ⌨️ Commands
 
 ```bash
 # Get current branch

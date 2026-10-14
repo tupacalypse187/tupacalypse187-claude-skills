@@ -6,11 +6,11 @@ arguments:
     required: true
 ---
 
-# Git Workflow: Full Workflow
+# 🔄 Git Workflow: Full Workflow
 
 This command runs the complete git workflow: create branch → commit changes → push → create PR → address reviews → monitor & merge.
 
-## Instructions
+## 📋 Instructions
 
 1. Create feature branch from description
 2. Commit changes with emoji
@@ -23,9 +23,9 @@ This command runs the complete git workflow: create branch → commit changes �
 
 You MUST execute ALL 6 steps sequentially without stopping. Do NOT stop after creating the PR (Step 4). Steps 5 and 6 are mandatory parts of this workflow, not optional follow-ups. After each step completes, immediately proceed to the next.
 
-## Steps
+## 👣 Steps
 
-### Step 1: Create Branch
+### 🌿 Step 1: Create Branch
 > After creating the branch, immediately proceed to Step 2.
 
 ```bash
@@ -35,7 +35,7 @@ BRANCH_NAME="feat/$(echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/
 git checkout -b "$BRANCH_NAME"
 ```
 
-### Step 2: Commit Changes
+### 📝 Step 2: Commit Changes
 > After committing, immediately proceed to Step 3.
 
 Analyze `git status` and `git diff --staged` to determine the commit type, then use the matching emoji:
@@ -58,14 +58,14 @@ git add .
 git commit -m "<EMOJI> <TYPE>: $1"
 ```
 
-### Step 3: Push
+### 👣 Step 3: Push
 > After pushing, immediately proceed to Step 4.
 
 ```bash
 git push -u origin "$BRANCH_NAME"
 ```
 
-### Step 4: Create PR
+### 📬 Step 4: Create PR
 > After creating the PR, IMMEDIATELY proceed to Step 5. Do NOT stop here.
 
 **Before creating the PR, analyze the actual changes:**
@@ -107,7 +107,7 @@ EOF
 
 **Extract the PR number** from the `gh pr create` output URL (e.g., `https://github.com/owner/repo/pull/42` → `PR_NUMBER=42`). Then IMMEDIATELY proceed to Step 5.
 
-### Step 5: Review Remediation
+### 👣 Step 5: Review Remediation
 > ⚠️ IMPORTANT: You MUST proceed to this step after PR creation. Do not stop.
 
 Wait for code reviews to appear, then evaluate and address each comment.
@@ -171,7 +171,7 @@ gh pr view $PR_NUMBER --json reviews --jq '.reviews[] | {state: .state, body: .b
 
 4. **Loop** — re-check for new comments on the fixes. If new comments exist, repeat from step 2. **Maximum 5 iterations** — after 5 rounds, stop and inform the user that manual intervention may be needed.
 
-### Step 6: Monitor & Merge
+### 🔀 Step 6: Monitor & Merge
 > After remediation is complete, immediately proceed to monitor and merge.
 
 Monitor CI checks and merge when clean:

@@ -9,11 +9,11 @@ arguments:
     required: false
 ---
 
-# Git Workflow: Commit Changes
+# 📝 Git Workflow: Commit Changes
 
 This command stages changes and creates a commit with conventional commit format using emojis.
 
-## Conventional Commit Types
+## 📝 Conventional Commit Types
 
 | Type | Emoji | When to use |
 |------|-------|-------------|
@@ -28,7 +28,7 @@ This command stages changes and creates a commit with conventional commit format
 | ci | 👷 | CI/CD changes |
 | build | 📦 | Build system changes |
 
-## Instructions
+## 📋 Instructions
 
 1. Check git status to see what files changed
 2. Determine the appropriate commit type based on changes
@@ -36,7 +36,7 @@ This command stages changes and creates a commit with conventional commit format
 4. Stage relevant files
 5. Create commit with `Co-authored-by:` footer if AI-assisted
 
-## Commands
+## ⌨️ Commands
 
 ```bash
 # Show status
@@ -51,7 +51,7 @@ git commit -m "✨ feat: add user authentication
 Co-authored-by: Claude <noreply@anthropic.com>"
 ```
 
-## Auto-detection Rules
+## 🔍 Auto-detection Rules
 
 - New files → `feat`
 - Changes to `*.md` → `docs`

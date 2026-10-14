@@ -9,11 +9,11 @@ arguments:
     required: false
 ---
 
-# Git Workflow: Monitor and Merge PR
+# 🔀 Git Workflow: Monitor and Merge PR
 
 This command monitors a PR for check completion and automatically merges when all checks pass.
 
-## Instructions
+## 📋 Instructions
 
 1. Get PR number from user
 2. Poll PR status every 10 seconds (up to 10 minutes)
@@ -22,7 +22,7 @@ This command monitors a PR for check completion and automatically merges when al
 5. Switch to the default branch and pull
 6. Delete local feature branch
 
-## Status Values
+## 📊 Status Values
 
 - `CLEAN` - All checks passed, ready to merge
 - `MERGED` - Already merged
@@ -32,7 +32,7 @@ This command monitors a PR for check completion and automatically merges when al
 - `UNSTABLE` - Checks pending or failed
 - `UNKNOWN` - Error checking status
 
-## Commands
+## ⌨️ Commands
 
 ```bash
 # Detect default branch

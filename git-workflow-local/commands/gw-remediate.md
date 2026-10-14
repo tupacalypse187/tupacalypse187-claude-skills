@@ -9,13 +9,13 @@ arguments:
     required: false
 ---
 
-# Git Workflow: Review Remediation
+# 🛠️ Git Workflow: Review Remediation
 
 This command polls a PR for code review comments, evaluates each one, makes code fixes if needed, pushes the fixes, replies to each comment, and re-monitors the PR.
 
-## Instructions
+## 📋 Instructions
 
-### Phase 1: Wait for Reviews
+### 📍 Phase 1: Wait for Reviews
 
 1. Get the PR number from the user
 2. Wait the specified number of seconds (default 180) for code reviews to complete
@@ -26,7 +26,7 @@ echo "⏳ Waiting ${WAIT_SECONDS:-180} seconds for code reviews to complete..."
 sleep ${WAIT_SECONDS:-180}
 ```
 
-### Phase 2: Fetch Review Comments
+### 📍 Phase 2: Fetch Review Comments
 
 1. Resolve the repo slug from the git remote
 2. Fetch all review comments (inline code comments) and issue comments on the PR
@@ -49,7 +49,7 @@ gh pr view $PR_NUMBER --json reviews --jq '.reviews[] | {state: .state, body: .b
 
 **Track comment IDs:** Initialize an empty list of processed IDs. You will compare against this list in Phase 7.
 
-### Phase 3: Evaluate Each Comment
+### 📍 Phase 3: Evaluate Each Comment
 
 For each review comment:
 
@@ -62,7 +62,7 @@ For each review comment:
    - **Already addressed** — the comment refers to code already fixed
 3. **Determine action** — whether code changes are needed or just a reply
 
-### Phase 4: Remediate Code
+### 📍 Phase 4: Remediate Code
 
 For each comment that requires code changes:
 
@@ -78,7 +78,7 @@ git commit -m "🐛 fix: address review feedback - <brief description>"
 
 5. **Repeat** for each comment requiring changes
 
-### Phase 5: Push and Reply
+### 📍 Phase 5: Push and Reply
 
 After all fixes are committed:
 
@@ -114,7 +114,7 @@ Reply format:
 - For questions: `💡 <answer to the question>`
 - For suggestions not applied: `🙏 Good suggestion, but <reason for not applying>. Happy to revisit if needed.`
 
-### Phase 6: Re-monitor PR
+### 📍 Phase 6: Re-monitor PR
 
 1. Wait for CI checks to pass on the new commits
 2. Check if the PR needs re-approval after the push
@@ -135,7 +135,7 @@ for i in {1..60}; do
 done
 ```
 
-### Phase 7: Loop Check
+### 📍 Phase 7: Loop Check
 
 After pushing fixes and waiting for CI:
 
@@ -156,7 +156,7 @@ gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments --jq '.[] | select(.in_reply_t
 3. When re-fetching in Phase 7, compare the new list of IDs against the processed list
 4. Only process IDs that appear in the new list but NOT in the processed list
 
-## Important Rules
+## 🚨 Important Rules
 
 - **Always reply to every comment** — never leave a comment unacknowledged
 - **Make minimal changes** — fix exactly what was requested, nothing more

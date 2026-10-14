@@ -6,11 +6,11 @@ arguments:
     required: true
 ---
 
-# Git Workflow: Create Feature Branch
+# 🌿 Git Workflow: Create Feature Branch
 
 This command creates a new feature branch from the default branch with proper naming convention.
 
-## Branch Naming Convention
+## 🌿 Branch Naming Convention
 
 - `feat/` - New features
 - `fix/` - Bug fixes
@@ -21,14 +21,14 @@ This command creates a new feature branch from the default branch with proper na
 - `chore/` - Maintenance tasks
 - `ci/` - CI/CD changes
 
-## Instructions
+## 📋 Instructions
 
 1. Detect the default branch name
 2. Switch to the default branch and pull
 3. Create new branch with proper prefix
 4. Show confirmation
 
-## Commands
+## ⌨️ Commands
 
 ```bash
 # Get branch name argument

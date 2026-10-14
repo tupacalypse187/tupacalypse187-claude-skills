@@ -3,13 +3,36 @@ name: git-workflow
 description: Complete git workflow automation for feature development. Use when creating feature branches, making commits, creating PRs, addressing reviews, monitoring PR status, merging, and cleaning up branches. Covers the full PR lifecycle from branch creation to merge including review remediation.
 ---
 
-# Git Workflow Automation
+# 🔄 Git Workflow Automation
 
 Complete git workflow automation for feature development lifecycle from branch creation to merge.
 
 ---
 
-## Overview
+## 📑 Table of Contents
+
+- [🌟 Overview](#-overview)
+- [⚡ Triggering the Skill](#-triggering-the-skill)
+- [🌿 Step 1: Create Feature Branch](#-step-1-create-feature-branch)
+- [📝 Step 2: Commit with Emoji Conventional Commits](#-step-2-commit-with-emoji-conventional-commits)
+- [👣 Step 3: Push to Remote](#-step-3-push-to-remote)
+- [🗂️ Step 4: Create PR with Structured Template](#️-step-4-create-pr-with-structured-template)
+- [🔗 Sources](#-sources)
+- [👣 Step 5: Poll for Code Reviews](#-step-5-poll-for-code-reviews)
+- [👣 Step 6: Evaluate and Remediate Review Comments](#-step-6-evaluate-and-remediate-review-comments)
+- [👣 Step 7: Push Fixes and Reply to Every Comment](#-step-7-push-fixes-and-reply-to-every-comment)
+- [👣 Step 8: Loop — Re-check for New Feedback](#-step-8-loop--re-check-for-new-feedback)
+- [📊 Step 9: Monitor PR Status (UNSTABLE -> CLEAN)](#-step-9-monitor-pr-status-unstable---clean)
+- [🌿 Step 10: Merge PR (Squash + Delete Branch)](#-step-10-merge-pr-squash--delete-branch)
+- [🧹 Step 11: Cleanup Local and Remote Branches](#-step-11-cleanup-local-and-remote-branches)
+- [🔄 Complete Workflow Script](#-complete-workflow-script)
+- [⌨️ Quick Reference Commands](#️-quick-reference-commands)
+- [📌 Important Notes](#-important-notes)
+- [⚠️ Common Gotchas](#️-common-gotchas)
+- [💻 Example Usage Sessions](#-example-usage-sessions)
+- [📌 Integration with Other Skills](#-integration-with-other-skills)
+
+## 🌟 Overview
 
 This skill automates the complete feature development workflow:
 
@@ -29,30 +52,30 @@ This skill automates the complete feature development workflow:
 
 ---
 
-## Triggering the Skill
+## ⚡ Triggering the Skill
 
 Use natural language to invoke any part of the workflow:
 
-### Full Workflow
+### 🔄 Full Workflow
 - "Complete git workflow for feature X"
 - "Create feature branch, commit, PR, and merge"
 - "Run full PR cycle"
 
-### Individual Steps
+### 👣 Individual Steps
 - "Create a feature branch for X"
 - "Commit my changes with emoji conventional commits"
 - "Create a PR with structured template"
 - "Monitor my PR status"
 - "Merge the PR and cleanup"
 
-### Review Handling
+### 🔍 Review Handling
 - "Check for PR comments and address them"
 - "Fix review comments on PR #123"
 - "Address feedback on current PR"
 
 ---
 
-## Step 1: Create Feature Branch
+## 🌿 Step 1: Create Feature Branch
 
 ```bash
 # Detect the default branch (main, master, etc.)
@@ -74,15 +97,15 @@ git checkout -b feat/descriptive-name
 
 ---
 
-## Step 2: Commit with Emoji Conventional Commits
+## 📝 Step 2: Commit with Emoji Conventional Commits
 
-### Stage and Commit
+### 📝 Stage and Commit
 ```bash
 git add <files>
 git commit -m "<emoji> <type>[optional scope]: <description>"
 ```
 
-### Commit Types & Emojis
+### 📝 Commit Types & Emojis
 
 | Type | Emoji | Description | Example |
 |------|-------|-------------|---------|
@@ -98,7 +121,7 @@ git commit -m "<emoji> <type>[optional scope]: <description>"
 | `build` | 📦 | Build system | `📦 build: upgrade to webpack 5` |
 | `revert` | ⏪ | Revert | `⏪ revert: rollback payment integration` |
 
-### Commit Message Format
+### 📝 Commit Message Format
 
 **Simple (default):**
 ```
@@ -120,7 +143,7 @@ validate authentication tokens properly.
 Co-authored-by: Claude <noreply@anthropic.com>
 ```
 
-### Best Practices
+### 🔹 Best Practices
 
 - ✅ Use present tense, imperative mood ("add" not "added")
 - ✅ Keep first line under 50 characters (72 max)
@@ -131,7 +154,7 @@ Co-authored-by: Claude <noreply@anthropic.com>
 
 ---
 
-## Step 3: Push to Remote
+## 👣 Step 3: Push to Remote
 
 ```bash
 git push -u origin feat/descriptive-name
@@ -139,9 +162,9 @@ git push -u origin feat/descriptive-name
 
 ---
 
-## Step 4: Create PR with Structured Template
+## 🗂️ Step 4: Create PR with Structured Template
 
-### Before creating the PR, analyze the actual changes:
+### 📋 Before creating the PR, analyze the actual changes:
 
 ```bash
 # See all changes in this branch vs the default branch
@@ -183,7 +206,7 @@ EOF
 )"
 ```
 
-### PR Template Examples
+### 💡 PR Template Examples
 
 **Feature PR:**
 ```markdown
@@ -246,7 +269,7 @@ Fix memory leak in event handler that caused increased memory usage over time.
 
 ---
 
-## Step 5: Poll for Code Reviews
+## 👣 Step 5: Poll for Code Reviews
 
 Wait for code reviews to complete before checking comments:
 
@@ -255,7 +278,7 @@ echo "⏳ Waiting for code reviews..."
 sleep 180
 ```
 
-### Fetch Review Comments
+### 🔍 Fetch Review Comments
 
 ```bash
 # Resolve repo slug
@@ -279,9 +302,9 @@ gh pr view $PR_NUMBER --json reviews --jq '.reviews[] | {state: .state, body: .b
 
 ---
 
-## Step 6: Evaluate and Remediate Review Comments
+## 👣 Step 6: Evaluate and Remediate Review Comments
 
-### Categorize Each Comment
+### 🔹 Categorize Each Comment
 
 | Category | Action | Examples |
 |----------|--------|---------|
@@ -291,7 +314,7 @@ gh pr view $PR_NUMBER --json reviews --jq '.reviews[] | {state: .state, body: .b
 | Question | Reply only, no code change | Reviewer asking for clarification |
 | Already addressed | Reply only | Comment refers to code already fixed |
 
-### Process for Each Comment
+### 🔹 Process for Each Comment
 
 1. **Read the referenced file** at the specified line number
 2. **Make the minimal fix** needed to address the feedback
@@ -309,7 +332,7 @@ git commit -m "🐛 fix: address review feedback - handle edge case"
 
 ---
 
-## Step 7: Push Fixes and Reply to Every Comment
+## 👣 Step 7: Push Fixes and Reply to Every Comment
 
 After all fixes are committed:
 
@@ -344,7 +367,7 @@ Reply format:
 
 ---
 
-## Step 8: Loop — Re-check for New Feedback
+## 👣 Step 8: Loop — Re-check for New Feedback
 
 After pushing fixes:
 
@@ -356,7 +379,7 @@ gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments --jq '.[] | select(.in_reply_t
 - If new comment IDs found → repeat from Step 6
 - If no new comments → proceed to Step 9
 
-### Common Review Responses
+### 🔍 Common Review Responses
 
 | Comment Type | Response Approach |
 |--------------|-------------------|
@@ -369,7 +392,7 @@ gh api repos/$REPO_SLUG/pulls/$PR_NUMBER/comments --jq '.[] | select(.in_reply_t
 
 ---
 
-## Step 9: Monitor PR Status (UNSTABLE -> CLEAN)
+## 📊 Step 9: Monitor PR Status (UNSTABLE -> CLEAN)
 
 Use this monitoring loop to wait for all CI checks to pass:
 
@@ -404,7 +427,7 @@ exit 1
 
 ---
 
-## Step 10: Merge PR (Squash + Delete Branch)
+## 🌿 Step 10: Merge PR (Squash + Delete Branch)
 
 ```bash
 gh pr merge <PR_NUMBER> --squash --delete-branch
@@ -420,7 +443,7 @@ gh pr merge <PR_NUMBER> --squash --delete-branch
 
 ---
 
-## Step 11: Cleanup Local and Remote Branches
+## 🧹 Step 11: Cleanup Local and Remote Branches
 
 ```bash
 # Switch back to the default branch
@@ -441,7 +464,7 @@ git push origin --delete feat/descriptive-name
 
 ---
 
-## Complete Workflow Script
+## 🔄 Complete Workflow Script
 
 Here's a complete script that combines the full workflow (monitor, remediate, merge, cleanup):
 
@@ -514,9 +537,9 @@ echo "✅ Done! Ready for next feature."
 
 ---
 
-## Quick Reference Commands
+## ⌨️ Quick Reference Commands
 
-### Branch Operations
+### 🌿 Branch Operations
 ```bash
 git checkout -b feat/feature-name    # Create feature branch
 git checkout "$DEFAULT_BRANCH" && git pull  # Sync with default branch
@@ -524,14 +547,14 @@ git branch -d feat/feature-name      # Delete local branch
 git push origin --delete feat/...    # Delete remote branch
 ```
 
-### Commit Operations
+### 📝 Commit Operations
 ```bash
 git add .                            # Stage all changes
 git commit -m "✨ feat: description"  # Commit with emoji
 git push -u origin feat/...          # Push with upstream tracking
 ```
 
-### PR Operations
+### 🔹 PR Operations
 ```bash
 gh pr create                         # Create PR interactively
 gh pr list                           # List open PRs
@@ -539,7 +562,7 @@ gh pr view <number>                  # View PR details
 gh pr merge <number> --squash        # Merge PR
 ```
 
-### Status & Monitoring
+### 📊 Status & Monitoring
 ```bash
 git status                           # Working tree status
 gh pr checks                         # View CI status
@@ -548,7 +571,7 @@ gh pr view <number> --json status    # Get PR status JSON
 
 ---
 
-## Important Notes
+## 📌 Important Notes
 
 - **NEVER commit directly to the default branch** unless explicitly instructed
 - **Always use feature branches** for changes
@@ -561,9 +584,9 @@ gh pr view <number> --json status    # Get PR status JSON
 
 ---
 
-## Common Gotchas
+## ⚠️ Common Gotchas
 
-### 1. Merge Conflicts
+### 🔀 1. Merge Conflicts
 **Problem**: PR shows `DIRTY` status with merge conflicts.
 
 **Solution**:
@@ -578,7 +601,7 @@ git commit -m "🔧 chore: resolve merge conflicts"
 git push
 ```
 
-### 2. Behind Base Branch
+### 🌿 2. Behind Base Branch
 **Problem**: PR shows `BEHIND` status.
 
 **Solution**:
@@ -590,7 +613,7 @@ git merge "$DEFAULT_BRANCH"
 git push
 ```
 
-### 3. Pre-commit Hooks Failing
+### 📝 3. Pre-commit Hooks Failing
 **Problem**: Commit blocked by linters/tests.
 
 **Solution**:
@@ -603,16 +626,16 @@ npm run test
 git commit --no-verify -m "message"
 ```
 
-### 4. PR Template Not Applied
+### 🔹 4. PR Template Not Applied
 **Problem**: Created PR without proper template.
 
 **Solution**: Always use `gh pr create --body` with heredoc or create PR template file in `.github/pull_request_template.md`
 
 ---
 
-## Example Usage Sessions
+## 💻 Example Usage Sessions
 
-### Session 1: Quick Bug Fix
+### 🔹 Session 1: Quick Bug Fix
 ```
 User: Create a fix for the login bug
 
@@ -625,7 +648,7 @@ Claude:
 6. Monitoring status...
 ```
 
-### Session 2: Feature with Review
+### 🔍 Session 2: Feature with Review
 ```
 User: Complete workflow for user profile feature
 
@@ -648,7 +671,7 @@ Claude:
 
 ---
 
-## Integration with Other Skills
+## 📌 Integration with Other Skills
 
 This skill works well with:
 

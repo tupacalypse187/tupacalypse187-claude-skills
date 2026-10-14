@@ -1,12 +1,20 @@
-# CLAUDE.md
+# 🤖 CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## 📑 Table of Contents
+
+- [🌟 Project Overview](#-project-overview)
+- [🏗️ Architecture](#️-architecture)
+- [📏 Conventions](#-conventions)
+- [📖 Zread Wiki](#-zread-wiki)
+- [🛠️ Development](#️-development)
+
+## 🌟 Project Overview
 
 This is a **Claude Code plugin** (`git-workflow`) that automates the full feature development lifecycle: branch creation, emoji conventional commits, PR creation with structured templates, review remediation, PR monitoring, merging, and branch cleanup. It contains no compilable code — only markdown-based slash commands, skill definitions, and a standalone bash script.
 
-## Architecture
+## 🏗️ Architecture
 
 ```
 .claude-plugin/
@@ -28,7 +36,7 @@ git-workflow-local/                    # The plugin directory
 pr-monitor-merge.sh                    # Standalone bash script for PR polling/auto-merge
 ```
 
-## Conventions
+## 📏 Conventions
 
 - **Emoji Conventional Commits** — Format: `emoji type[optional scope]: description` (e.g., `✨ feat: add feature`, `🐛 fix(scope): description`). Each type has a specific emoji prefix.
 - **Branch Naming** — Prefixes: `feat/`, `fix/`, `docs/`, `refactor/`, `perf/`, `test/`, `chore/`, `ci/`.
@@ -37,7 +45,7 @@ pr-monitor-merge.sh                    # Standalone bash script for PR polling/a
 - **Co-authored-by** — AI-assisted commits include `Co-authored-by: Claude <noreply@anthropic.com>`.
 - **Version Bumping** — Before pushing any PR that modifies plugin files (`commands/`, `skills/`, `.claude-plugin/`), increment the `version` field in both `.claude-plugin/marketplace.json` and `git-workflow-local/.claude-plugin/plugin.json` using semver (e.g., `1.1.0` → `1.2.0`). Claude Code uses the version to determine if an update is needed — without a bump, users won't receive the changes.
 
-## Zread Wiki
+## 📖 Zread Wiki
 
 The `.zread/` directory contains a generated project wiki from [Zread CLI](https://zread.ai/cli). It is tracked in git so it syncs across devices.
 
@@ -56,7 +64,7 @@ for d in */; do [ "$d" != "$latest" ] && rm -rf "$d"; done
 
 **What to commit:** `wiki/current` (pointer to latest version) + the single versioned snapshot folder. `wiki/drafts/` is gitignored (in-progress generation artifacts).
 
-## Development
+## 🛠️ Development
 
 There is no build system, test suite, or linting. All plugin components are markdown files. To test changes:
 

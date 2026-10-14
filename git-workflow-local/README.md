@@ -1,10 +1,22 @@
-# Git Workflow Plugin
+# 🌿 Git Workflow Plugin
 
 Complete git workflow automation plugin for Claude Code — branch creation, emoji conventional commits, PR creation, review remediation, and merge monitoring.
 
-## Installation
+## 📑 Table of Contents
 
-### Option 1: From GitHub (Recommended)
+- [📦 Installation](#-installation)
+- [📖 How to Use](#-how-to-use)
+- [⌨️ Slash Commands](#️-slash-commands)
+- [📝 Commit Types Reference](#-commit-types-reference)
+- [🗂️ PR Template Structure](#️-pr-template-structure)
+- [📈 PR Monitoring Script](#-pr-monitoring-script)
+- [🗣️ Common Phrases to Trigger the Skill](#️-common-phrases-to-trigger-the-skill)
+- [💡 Tips](#-tips)
+- [📄 License](#-license)
+
+## 📦 Installation
+
+### 🔀 Option 1: From GitHub (Recommended)
 
 ```bash
 # Add this repo as a marketplace source
@@ -14,28 +26,28 @@ claude plugin marketplace add tupacalypse187/tupacalypse187-claude-skills
 claude plugin install git-workflow@git-workflow-local
 ```
 
-### Option 2: From a Claude Code session
+### 🔹 Option 2: From a Claude Code session
 
 ```
 /plugin marketplace add tupacalypse187/tupacalypse187-claude-skills
 /plugin install git-workflow@git-workflow-local
 ```
 
-### Option 3: From local clone
+### 🔹 Option 3: From local clone
 
 ```bash
 claude plugin marketplace add /path/to/this-repo
 claude plugin install git-workflow@git-workflow-local
 ```
 
-### Updating
+### 🔹 Updating
 
 ```bash
 # After pulling changes to the source directory
 claude plugin update git-workflow@git-workflow-local
 ```
 
-### Uninstalling
+### 📦 Uninstalling
 
 ```bash
 claude plugin uninstall git-workflow@git-workflow-local
@@ -43,11 +55,11 @@ claude plugin uninstall git-workflow@git-workflow-local
 
 ---
 
-## How to Use
+## 📖 How to Use
 
 Simply talk to Claude Code in natural language! Here are practical examples:
 
-### Example 1: Full Workflow (Start to Finish)
+### 💡 Example 1: Full Workflow (Start to Finish)
 
 **You say:**
 > "Complete git workflow for adding dark mode to the settings page"
@@ -63,7 +75,7 @@ Simply talk to Claude Code in natural language! Here are practical examples:
 
 ---
 
-### Example 2: Just Create a Branch
+### 💡 Example 2: Just Create a Branch
 
 **You say:**
 > "Create a feature branch for user authentication"
@@ -76,7 +88,7 @@ git checkout -b feat/user-authentication
 
 ---
 
-### Example 3: Commit Your Changes
+### 💡 Example 3: Commit Your Changes
 
 **You say:**
 > "Commit my changes with an emoji commit message"
@@ -88,7 +100,7 @@ git checkout -b feat/user-authentication
 
 ---
 
-### Example 4: Create a PR
+### 💡 Example 4: Create a PR
 
 **You say:**
 > "Create a pull request with a structured template"
@@ -104,7 +116,7 @@ Add OAuth2 login flow...
 
 ---
 
-### Example 5: Review Remediation
+### 💡 Example 5: Review Remediation
 
 **You say:**
 > "Check PR #13 for review comments and address them"
@@ -120,7 +132,7 @@ Add OAuth2 login flow...
 
 ---
 
-### Example 6: Monitor & Merge PR
+### 💡 Example 6: Monitor & Merge PR
 
 **You say:**
 > "Monitor PR #13 and merge when ready"
@@ -134,7 +146,7 @@ Add OAuth2 login flow...
 
 ---
 
-## Slash Commands
+## ⌨️ Slash Commands
 
 For quicker access, you can also use slash commands (prefixed with `gw-` for Git Workflow):
 
@@ -151,7 +163,7 @@ For quicker access, you can also use slash commands (prefixed with `gw-` for Git
 
 ---
 
-## Commit Types Reference
+## 📝 Commit Types Reference
 
 | What you did | Say this | Commit format |
 |--------------|----------|---------------|
@@ -168,7 +180,7 @@ For quicker access, you can also use slash commands (prefixed with `gw-` for Git
 
 ---
 
-## PR Template Structure
+## 🗂️ PR Template Structure
 
 When creating PRs, Claude uses this structure:
 
@@ -192,7 +204,7 @@ When creating PRs, Claude uses this structure:
 
 ---
 
-## PR Monitoring Script
+## 📈 PR Monitoring Script
 
 A standalone bash script is included at the repo root (`pr-monitor-merge.sh`) for use outside Claude Code:
 
@@ -211,7 +223,7 @@ chmod +x pr-monitor-merge.sh
 
 ---
 
-## Common Phrases to Trigger the Skill
+## 🗣️ Common Phrases to Trigger the Skill
 
 | Task | What to Say |
 |------|-------------|
@@ -225,7 +237,7 @@ chmod +x pr-monitor-merge.sh
 
 ---
 
-## Tips
+## 💡 Tips
 
 1. **Be specific** — "Create a feature branch for S3 upload" works better than "Create a branch"
 2. **Check status** — You can ask "What's the PR status?" anytime
@@ -234,6 +246,6 @@ chmod +x pr-monitor-merge.sh
 
 ---
 
-## License
+## 📄 License
 
 MIT
