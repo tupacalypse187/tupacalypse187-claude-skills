@@ -101,7 +101,7 @@ gh pr create $DRAFT_FLAG --title "$TITLE" --body "$(cat <<'EOF'
 
 ---
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+🤖 Generated with [Muse](https://muse.ai)
 EOF
 )"
 ```

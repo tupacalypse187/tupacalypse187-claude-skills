@@ -199,7 +199,7 @@ When creating PRs, Claude uses this structure:
 ## 🔗 Sources
 - Links to related issues/docs
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+🤖 Generated with [Muse](https://muse.ai)
 ```
 
 ---
