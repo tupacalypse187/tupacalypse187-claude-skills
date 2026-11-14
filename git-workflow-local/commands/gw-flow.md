@@ -100,7 +100,7 @@ gh pr create --title "<EMOJI> <TYPE>: $1" --body "$(cat <<EOF
 
 ---
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+🤖 Generated with [Muse](https://muse.ai)
 EOF
 )"
 ```

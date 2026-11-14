@@ -201,7 +201,7 @@ gh pr create \
 
 ---
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+🤖 Generated with [Muse](https://muse.ai)
 EOF
 )"
 ```
